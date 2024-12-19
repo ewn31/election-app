@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Management</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #3f51b5;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .sidebar a:hover {
+            background-color: #283593;
+        }
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .list-group {
+            list-style: none;
+            padding: 0;
+        }
+        .list-group-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .list-group-item a {
+            text-decoration: none;
+            color: #3f51b5;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .badge.bg-info {
+            background-color: #64b5f6;
+            color: white;
+        }
+        .badge.bg-secondary {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #283593;
+        }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+          }
+          
+          td, th {
+            /*border: 1px solid #dddddd;*/
+            text-align: left;
+            padding: 8px;
+          }
+          
+          tr:nth-child(even) {
+            background-color: #dddddd;
+          }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h4>Menu</h4>
+            <a href="#" onclick="showSection('current-elections')">Current Elections</a>
+            <a href="#" onclick="showSection('new-election')">New Election</a>
+            <a href="#" onclick="showSection('history')">History</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Current Elections -->
+            <div id="current-elections" class="content-section active">
+                <h2>History</h2>
+                <table>
+                    <th>
+                        <tr>
+                            <td>Name</td>
+                            <td>Type</td>
+                            <td>Scope</td>
+                            <td>Start Date</td>
+                            <td>End Date</td>
+                        </tr>
+                    </th>
+                        <% for (const election of history) {%>
+                            <tr>
+                                <td> <a href=<%=`/elections/${election.ID}-${election.NAME}` %>><%=election.NAME.replaceAll("-", " ") %></a></td>
+                                <td><%=election.TYPE %></td>
+                                <td><%=election.SCOPE %></td>
+                                <td><%=election.START_DATE.toDateString() %></td>
+                                <td><%=election.END_DATE.toDateString() %></td>
+                                <td><button><a href=<%=`/election-status/${election.ID}` %> >See Status</a></button></td>
+                            </tr>
+                        <% } %>
+                </table>
+            </div>
+
+            <!-- New Election -->
+            <div id="new-election" class="content-section">
+                <h2>New Election</h2>
+                <form action="/elections" method="POST">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Election Name" required>
+
+                    <label for="type" class="form-label">Type</label>
+                    <select name="type" class="form-control" required>
+                        <option value="" disabled selected>Select Type</option>
+                        <option value="general">General</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="department">Department</option>
+                    </select>
+
+                    <label for="scope" class="form-label">Scope</label>
+                    <input type="text" name="scope" class="form-control" placeholder="Faculty or Department Name">
+
+                    <label for="start-date" class="form-label">Start Date</label>
+                    <input type="date" name="startDate" class="form-control" required>
+
+                    <label for="end-date" class="form-label">End Date</label>
+                    <input type="date" name="endDate" class="form-control" required>
+
+                    <button type="submit" class="btn-primary">Submit</button>
+                </form>
+            </div>
+
+            <!-- History -->
+            <div id="history" class="content-section">
+                <h2>History</h2>
+                <p>Past elections and their results will be displayed here.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

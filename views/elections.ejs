@@ -1,0 +1,114 @@
+<%- include('partials/htmlhead'); -%>
+<div class="w3-deep-orange w3-monospace">
+    <header class="w3-container">
+        <div class="w3-bar w3-deep-orange">
+            <a class="w3-bar-item w3-right" href="/logout">Log out</a>
+            <!--<a class="w3-bar-item w3-right" href="">Profile</a>-->
+        </div>
+        <nav class="w3-bar">
+            <button class="w3-bar-item w3-button tab-btn w3-sand" onclick="showSection('current-elections', 'current-elections-btn');" id="current-elections-btn">Current Elections</button>
+            <button class="w3-bar-item w3-button tab-btn" onclick="showSection('new-election', 'new-election-btn');" id="new-election-btn">New Election</button>
+        </nav>
+    </header>
+    <div class="w3-row">
+        <div class="w3-card w3-col s12 m12 l9 w3-sand w3-round w3-container" style="box-shadow: none;">
+            <table class="w3-table w3-bordered full-height content-section active" style="min-height: 300px;" id="current-elections">
+                <thead>
+                    <th>NAME</th>
+                    <th>TYPE</th>
+                    <th>SCOPE</th>
+                    <th>START DATE</th>
+                    <th>END DATE</th>
+                </thead>
+                <tbody>
+                    <% for (const election of elections) {%>
+                        <tr>
+                            <td> <a href=<%=`/elections/${election.ID}-${election.NAME}` %>><%=election.NAME.replaceAll("-", " ") %></a></td>
+                            <td><%=election.TYPE %></td>
+                            <td><%=election.SCOPE %></td>
+                            <td><%=election.START_DATE.toDateString() %></td>
+                            <td><%=election.END_DATE.toDateString() %></td>
+                            <td><button><a href=<%=`/election-status/${election.ID}` %> >See Status</a></button></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="content-section" id="new-election">
+                <div class="w3-margin">
+                    <h3>New Election</h3>
+                </div>
+            
+            <form action="/elections" method="POST" class="w3-padding">
+                <div class="w3-margin">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" name="name" class="w3-input w3-border w3-round" required>
+                </div>
+                <div class="w3-margin">
+                <label for="type" class="">Type</label>
+                <select name="type" class="w3-select" required>
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="general">General</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="department">Department</option>
+                </select>
+                </div>
+                <div class="w3-margin">
+                <label for="scope" class="form-label">Scope</label>
+                <input type="text" name="scope" class="w3-input w3-border w3-round" placeholder="Faculty Name, Department Name or School for General Elections">
+                </div>
+                <div class="w3-margin">
+                <label for="start-date" class="form-label">Start Date</label>
+                <input type="date" name="startDate" class="w3-input w3-border w3-round" required>
+                </div>
+                <div class="w3-margin">
+                <label for="end-date" class="form-label">End Date</label>
+                <input type="date" name="endDate" class="w3-input w3-border w3-round" required>
+                </div>
+                <div class="w3-margin">
+                <input type="submit" class="w3-input w3-button w3-round w3-deep-orange" value="Create">
+                </div>
+            </form>
+            </div>
+        </div>
+        
+        <div class="w3-col l3 w3-round w3-container w3-hide-small full-height">
+            <div class="w3-card w3-padding w3-round background" style="box-shadow: none;">
+                <h3>Getting Started</h3>
+                <h4>Create A New Election</h4>
+                <p>Click the new election tab to create an election</p>
+                <h4>See the status of Elections</h4>
+                <p>Click on the [see-status] button of the election to see the status</p>
+                <h4>Add Candidates to election</h4>
+                <p>Click on the name of the election button to add canditates to the election</p>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+    <script>
+        function showSection(sectionId, btnId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            const tabBtns = document.querySelectorAll(".tab-btn");
+            tabBtns.forEach(btn => btn.classList.remove("w3-sand"));
+            document.getElementById(btnId).classList.add("w3-sand");
+        }
+    </script>
+
+    <% if(feedback !== "") {%>
+        
+    <div id="feedback" class="w3-panel w3-center w3-animate-bottom w3-black" style="position: absolute; bottom:15%; width:100%;"><%=feedback %></div>
+
+    <script>
+        const fd = document.getElementById("feedback");
+        setTimeout(()=>{
+            fd.style.display="none"
+        }, 10000);
+    </script>
+    <% } %>
+</div>
+<%- include('partials/resubmission.ejs') -%>
+<%- include('partials/htmlfoot') -%>
