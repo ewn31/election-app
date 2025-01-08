@@ -4,7 +4,8 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const cfg = {
-    port:3000
+    port:3000,
+    url:"localhost"
 }
 const port = process.env.PORT
 
