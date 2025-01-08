@@ -2,7 +2,14 @@ body{
     height: 100%;
     margin: 0px;
     line-height: 1.5;
-    font-family:   ibm-plex-mono, monospace;
+    font-family: Euclid Square,IBM Plex Mono, monospace;
+}
+h1,h2,h3,h4,h5,h6{
+    font-family: monospace;
+}
+th{
+    font-family: Euclid Square;
+    font-weight: 600;
 }
 
 

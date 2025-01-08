@@ -1,6 +1,7 @@
 const express = require("express");
 const {addStudent, verifyUser, verifyAdmin, addElection, getElections, addCandidate, getStudent, getStudentElections, getCandidates, voteCandidates, getElectionStatus, registerVote, getHistory} = require('../lib/dbConnect');
-const session = require("express-session");
+const formidable = require("formidable");
+//const session = require("express-session");
 
 const appRouter = express.Router();
 
@@ -15,7 +16,7 @@ appRouter.all('/', (req, res)=>{
                 if (accessGranted) {
                     res.cookie("session", "123qwe", {maxAge: (1000*60*15)});
                     res.cookie("matricule", req.body.matricule, {maxAge:(1000*60*15)});
-                    res.redirect(`/vote/${req.body.matricule}`);}
+                    res.redirect(`/student/${req.body.matricule}`);}
                 else res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
             } catch (error) {
                 console.log(error)
@@ -44,7 +45,7 @@ appRouter.all('/admin', (req, res)=>{
     }
 });
     
-appRouter.all("/vote/:id", (req, res)=>{
+appRouter.all("/student/:id", (req, res)=>{
     if (req.method === 'GET'){
         (async () => {
             try {
@@ -52,7 +53,7 @@ appRouter.all("/vote/:id", (req, res)=>{
                 console.log(student);
                 const elections = await getStudentElections(student[0]);
                 console.log(elections);
-                res.render("vote", {title:"vote",data:student[0], elections:elections, feedback:"Hello"});
+                res.render("student", {title:"vote",data:student[0], elections:elections, feedback:"Hello"});
             } catch (error) {
                 console.log(error);
             }
@@ -63,7 +64,7 @@ appRouter.all("/vote/:id", (req, res)=>{
         res.send("voting page");
     }
 })
-appRouter.all("/voting/:id", (req, res)=>{
+appRouter.all("/vote/:id", (req, res)=>{
     const info = (req.params.id).split("-");
     const id = info[0];
     const matricule = info[1];
@@ -73,7 +74,7 @@ appRouter.all("/voting/:id", (req, res)=>{
             try {
                 const candidates = await getCandidates(id);
                 console.log(candidates);
-                res.render('voting', {title:"voting",candidates:candidates, id:id, matricule})
+                res.render('vote', {title:"vote",candidates:candidates, id:id, matricule})
             } catch (error) {
                 console.log(error);
             }
@@ -91,7 +92,7 @@ appRouter.all("/voting/:id", (req, res)=>{
                 console.log(student);
                 const elections = await getStudentElections(student[0]);
                 console.log(elections);
-                res.render("vote", {title:"vote",data:student[0], elections:elections, feedback:status})
+                res.render("student", {title:"vote",data:student[0], elections:elections, feedback:status})
             } catch (error) {
                 console.log(error)
                 res.send("failed")
@@ -233,5 +234,22 @@ appRouter.get("/logout", (req, res)=>{
        res.clearCookie("matricule");
     }
     res.redirect("/");
+})
+appRouter.all("/uploads", (req, res)=>{
+    if(req.method === 'GET'){
+        res.render('upload', {title:'Upload file'})
+    }
+    if(req.method === 'POST'){
+        const form = formidable({uploadDir:'../uploads', keepExtensions:true});
+        form.parse(req, (err, data, files=>{
+            if(err){
+                console.log(err)
+                next(err);
+            }
+            if(files){
+                console.log("file uploaded");
+            }
+        }))
+    }
 })
 module.exports = appRouter;
