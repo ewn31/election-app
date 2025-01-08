@@ -1,0 +1,32 @@
+body{
+    height: 100%;
+    margin: 0px;
+    font-family:inter,"Roboto flex" ;
+    line-height: 1.6;
+}
+
+
+.full-height{
+    height: 500px;
+}
+
+.form-padding{
+    padding: 24px;
+}
+
+.active{
+    border-color: white;
+}
+
+.background{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tomato{
+    background-color: orangered;
+    color: aliceblue;
+}
+
+no-shadow{
+    box-shadow: none;
+}

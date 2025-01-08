@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body class="w3-deep-orange">
+    <header class="w3-container">
+        <div class="w3-bar w3-deep-orange">
+            <a class="w3-bar-item w3-right" href="">Log out</a>
+            <a class="w3-bar-item w3-right" href="">Profile</a>
+        </div>
+        <nav class="w3-bar">
+            <button class="w3-bar-item w3-button w3-white" onclick="showSection('current-elections');">Current Elections</button>
+            <button class="w3-bar-item w3-button" onclick="showSection('new-election');">New Election</button>
+        </nav>
+    </header>
+    <div class="w3-row">
+        <div class="w3-card w3-col s12 m12 l8 w3-white w3-round-large w3-container content-section" style="box-shadow: none;">
+            <table class="w3-table w3-bordered full-height">
+                <thead>
+                    <th>NAME</th>
+                    <th>TYPE</th>
+                    <th>SCOPE</th>
+                    <th>START DATE</th>
+                    <th>END DATE</th>
+                </thead>
+                <tbody>
+                    <% for (const election of elections) {%>
+                        <tr>
+                            <td> <a href=<%=`/elections/${election.ID}-${election.NAME}` %>><%=election.NAME.replaceAll("-", " ") %></a></td>
+                            <td><%=election.TYPE %></td>
+                            <td><%=election.SCOPE %></td>
+                            <td><%=election.START_DATE.toDateString() %></td>
+                            <td><%=election.END_DATE.toDateString() %></td>
+                            <td><button><a href=<%=`/election-status/${election.ID}` %> >See Status</a></button></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="w3-col l4 w3-round-xlarge w3-container w3-hide-small full-height">
+            <div class="w3-card w3-padding w3-round-large background" style="box-shadow: none;">
+                <h3>Getting Started</h3>
+                <h4>Create A New Election</h4>
+                <h4>See the status of Elections</h4>
+                <p>Click here to create a <a href="">new election</a></p>
+                <p>Click on the [see status] button to see the status of the Election</p>
+                <h4>Add Candidates to election</h4>
+                <p>Click on the Add Candidates button to add canditates to the election</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="w3-row">
+        <div class="w3-card w3-col s12 m12 l8 w3-white w3-round-large w3-container content-section" style="box-shadow: none;">
+        <h2>New Election</h2>
+        <form action="/elections" method="POST" class="w3-padding">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" class="w3-input w3-border w3-round-xxlarge" required>
+
+            <label for="type" class="form-label">Type</label>
+            <select name="type" class="form-control" required>
+                <option value="" disabled selected>Select Type</option>
+                <option value="general">General</option>
+                <option value="faculty">Faculty</option>
+                <option value="department">Department</option>
+            </select>
+
+            <label for="scope" class="form-label">Scope</label>
+            <input type="text" name="scope" class="w3-input w3-border w3-round-xxlarge" placeholder="Faculty or Department Name or School">
+
+            <label for="start-date" class="form-label">Start Date</label>
+            <input type="date" name="startDate" class="w3-input w3-border w3-round-xxlarge" required>
+
+            <label for="end-date" class="form-label">End Date</label>
+            <input type="date" name="endDate" class="w3-input w3-border w3-round-xxlarge" required>
+
+            <button type="submit" class="w3-input w3-round-xxlarge w3-deep-orange" >Submit</button>
+        </form>
+        </div>
+    </div>
+
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

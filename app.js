@@ -22,6 +22,7 @@ app.use(session({
     saveUninitialized:false
 }))
 app.use((req, res, next)=>{
+    res.setHeader("ngrok-skip-browser-warning", "true");
     const c = req.cookies;
     const u = req.url;
     console.log(c);
