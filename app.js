@@ -4,8 +4,10 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const cfg = {
-    port:3000 
+    port:3000,
+    url:"localhost"
 }
+const port = process.env.PORT
 
 const app =  express();
 
@@ -41,6 +43,6 @@ app.use((req, res)=>{
 })
 
 
-app.listen(cfg.port, ()=>{
-    console.log(`Server up and running on http://localhost:${cfg.port}`)
+app.listen(port, ()=>{
+    console.log(`Server up and running on http://${cfg.url}:${port}`)
 })
