@@ -288,8 +288,9 @@ appRouter.all('/modify-election/:id',(req, res)=>{
     if(req.method === 'POST'){
         (async () => {
             const data = req.body;
+            const id = req.params.id;
             try {
-                const feedback = await updateElection(data);
+                const feedback = await updateElection(data,id);
                 res.send(feedback);
             } catch (error) {
                 console.log(error)
