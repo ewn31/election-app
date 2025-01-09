@@ -1,5 +1,5 @@
 const express = require("express");
-const {addStudent, verifyUser, verifyAdmin, addElection, getElections, addCandidate, getStudent, getStudentElections, getCandidates, voteCandidates, getElectionStatus, registerVote, getHistory} = require('../lib/dbConnect');
+const {addStudent, updateStudent, verifyUser, verifyAdmin, addElection, getElections, getElection, addCandidate, getStudent, getStudentElections, getCandidates, voteCandidates, getElectionStatus, registerVote, getHistory, updateElection} = require('../lib/dbConnect');
 const formidable = require("formidable");
 //const session = require("express-session");
 
@@ -250,6 +250,51 @@ appRouter.all("/uploads", (req, res)=>{
                 console.log("file uploaded");
             }
         }))
+    }
+})
+appRouter.all('/update-student', (req, res)=>{
+    if(req.method === "GET"){
+        (async () => {
+            try {
+                const student = await getStudent(req.cookies.matricule);
+                console.log(student);
+                const elections = await getStudentElections(student[0]);
+                console.log(elections);
+                res.render("updateStudent", {title:"update-student",data:student[0], feedback:"Hello"});
+            } catch (error) {
+                console.log(error);
+            }
+        })();
+    }
+    if(req.method === 'POST'){
+        (async () => {
+            try {
+                await updateStudent(req.body)
+                res.send('profile modified')
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }
+})
+appRouter.all('/modify-election/:id',(req, res)=>{
+    if(req.method === 'GET'){
+        (async () => {
+            const election = await getElection(req.params.id);
+            console.log(election);
+            res.render('modifyElection',{title:"Modify Election",election});
+        })();
+    }
+    if(req.method === 'POST'){
+        (async () => {
+            const data = req.body;
+            try {
+                const feedback = await updateElection(data);
+                res.send(feedback);
+            } catch (error) {
+                console.log(error)
+            }
+        })();
     }
 })
 module.exports = appRouter;
