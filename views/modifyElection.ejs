@@ -5,7 +5,7 @@
                 <h3>Modify Election</h3>
             </div>
         
-        <form action="/modify-election" method="POST" class="w3-padding">
+        <form action=<%=`/modify-election/${election.ID}`%> method="POST" class="w3-padding">
             <div class="w3-margin">
                 <label for="name" class="form-label">Name</label>
                 <input type="text" name="name" class="w3-input w3-border w3-round" value=<%=`${election.NAME}` %> required>
@@ -14,15 +14,15 @@
                 <label for="type" class="">Type</label>
                 <select name="type" class="w3-select" required>
                     <option value="" disabled selected>Select Type</option>
-                    <% if(election.TYPE === 'general'){ %>
+                    <% if(election.TYPE === 'GENERAL'){ %>
                     <option value="general" selected>General</option>
                     <option value="faculty" >Faculty</option>
                     <option value="department">Department</option>
-                    <% }else if(election.TYPE === 'faculty'){ %>
+                    <% }else if(election.TYPE === 'FACULTY'){ %>
                     <option value="faculty" selected>Faculty</option>
                     <option value="general">General</option> 
                     <option value="department">Department</option>  
-                    <% }else if(election.TYPE === 'department'){ %>
+                    <% }else if(election.TYPE === 'DEPARTMENT'){ %>
                     <option value="department" selected>Department</option>
                     <option value="faculty">Faculty</option>
                     <option value="general">General</option>
