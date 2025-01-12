@@ -30,6 +30,7 @@
                             <td><%=election.END_DATE.toDateString() %></td>
                             <td><button><a href=<%=`/election-status/${election.ID}` %> >See Status</a></button></td>
                             <td><button><a href=<%= `/modify-election/${election.ID}` %> >Modify</a></button></td>
+                            <td><button class='w3-alert'>Delete</button></td>
                         </tr>
                     <% } %>
                 </tbody>
