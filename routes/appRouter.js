@@ -1,5 +1,5 @@
 const express = require("express");
-const {addStudent, updateStudent, verifyUser, verifyAdmin, addElection, getElections, getElection, addCandidate, getStudent, getStudentElections, getCandidates, voteCandidates, getElectionStatus, registerVote, getHistory, updateElection} = require('../lib/dbConnect');
+const {addStudent, updateStudent, verifyUser, verifyAdmin, addElection, getElections, getElection, addCandidate, getStudent, getStudentElections, getCandidates, voteCandidates, getElectionStatus, registerVote, getHistory, updateElection, deleteElection} = require('../lib/dbConnect');
 const formidable = require("formidable");
 //const session = require("express-session");
 
@@ -120,13 +120,15 @@ appRouter.all('/register', (req, res)=>{
        })();
     }
 })
+async function renderElections (res, feedback) {
+    const elections = await getElections();
+    console.log(elections);
+    const f = feedback || "Welcome Back";
+    res.render("elections",{title:"elections", elections:elections, feedback:f})
+};
 appRouter.all("/elections", (req, res)=>{
     if(req.method === 'GET'){
-        (async () => {
-            const elections = await getElections();
-            console.log(elections);
-            res.render("elections",{title:"elections", elections:elections, feedback:"Welcome Back"})
-        })();
+        renderElections(res, "Welcome back");
     }
     if(req.method === 'POST'){
         (async () => {
@@ -297,5 +299,21 @@ appRouter.all('/modify-election/:id',(req, res)=>{
             }
         })();
     }
+})
+appRouter.get('/delete-election/:id', (req, res)=>{
+    const id = req.params.id;
+    (async () => {
+        try {
+            const feedback = await deleteElection(id);
+            if (feedback === true){
+                await renderElections(res, "Election succesfully deleted")
+            }else{
+                await renderElections(res, "Election delete failed")
+            }
+        } catch (error) {
+            console.log(error)
+            await renderElections(res, "An error occurred")
+        }
+    })()
 })
 module.exports = appRouter;

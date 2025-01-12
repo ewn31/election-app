@@ -23,18 +23,33 @@
                 <tbody>
                     <% for (const election of elections) {%>
                         <tr>
-                            <td> <a href=<%=`/elections/${election.ID}-${election.NAME}` %>><%=election.NAME.replaceAll("-", " ") %></a></td>
+                            <td> <a id="election-name" href=<%=`/elections/${election.ID}-${election.NAME}` %> ><%=election.NAME.replaceAll("-", " ") %></a></td>
                             <td><%=election.TYPE %></td>
                             <td><%=election.SCOPE %></td>
                             <td><%=election.START_DATE.toDateString() %></td>
                             <td><%=election.END_DATE.toDateString() %></td>
-                            <td><button><a href=<%=`/election-status/${election.ID}` %> >See Status</a></button></td>
-                            <td><button><a href=<%= `/modify-election/${election.ID}` %> >Modify</a></button></td>
-                            <td><button class='w3-alert'>Delete</button></td>
+                            <td><button class="w3-btn"><a href=<%=`/election-status/${election.ID}` %> >See Status</a></button></td>
+                            <td><button class="w3-btn"><a href=<%= `/modify-election/${election.ID}` %> >Modify</a></button></td>
+                            <td id="election-id" style="display:none;"><%=election.ID%></td>
+                            <td><button class='w3-red w3-btn' onclick="document.getElementById('deleteModal').style.display='block';">Delete</button></td>
                         </tr>
                     <% } %>
                 </tbody>
             </table>
+            <div class="w3-modal" id="deleteModal" style="display: none;">
+                <div class="w3-modal-content w3-margin" style="max-width: 400px;">
+                    <div class="w3-container">
+                        <span onclick="document.getElementById('deleteModal').style.display='none'"
+                        class="w3-button w3-display-topright">&times;</span>
+                        <p id="delete-election-warning"></p>
+                        <button class="w3-left w3-red w3-button w3-margin-bottom"><a id="delete-election-link">Delete</a></button>
+                      </div>
+                      <script>
+                        document.getElementById('delete-election-warning').innerText = `Are you sure you want to delete ${document.getElementById('election-name').innerText}`
+                        document.getElementById('delete-election-link').setAttribute("href", `/delete-election/${document.getElementById('election-id').innerHTML}`)
+                      </script>
+                </div>
+            </div>
             <div class="content-section" id="new-election">
                 <div class="w3-margin">
                     <h3>New Election</h3>
