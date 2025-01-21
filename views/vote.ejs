@@ -5,7 +5,7 @@
             <h2>Election</h2>
             <p>Submit form to vote</p>            
         </div>
-        <form action=<%=`/voting/${id}-${matricule}` %> method="post" class="w3-padding ">
+        <form action=<%=`/vote/${id}-${matricule}` %> method="post" class="w3-padding ">
             <% for (const position in candidates) {  %>
                 <div class="w3-margin">
                 <label for="position"><h3><%=position %><h3></label></div>
@@ -15,7 +15,7 @@
                 <% } %>
             <% } %>
             <div class="w3-margin">
-                <input type="submit" class="w3-input w3-round w3-button w3-deep-orange" value="vote">
+                <input type="submit" class="w3-input w3-round w3-button w3-deep-orange" <% if(candidates.length === 0){ %><%=`disabled` %><% } %> value="vote">
             </div>
         </form>
     </div>

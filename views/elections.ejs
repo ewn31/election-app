@@ -42,7 +42,7 @@
                         <span onclick="document.getElementById('deleteModal').style.display='none'"
                         class="w3-button w3-display-topright">&times;</span>
                         <p id="delete-election-warning"></p>
-                        <button class="w3-left w3-red w3-button w3-margin-bottom"><a id="delete-election-link">Delete</a></button>
+                        <button class="w3-left w3-red w3-button w3-margin-bottom" onclick="deleteElection()">Delete</button>
                       </div>
                       <script>
                         document.getElementById('delete-election-warning').innerText = `Are you sure you want to delete ${document.getElementById('election-name').innerText}`
@@ -112,6 +112,21 @@
             tabBtns.forEach(btn => btn.classList.remove("w3-sand"));
             document.getElementById(btnId).classList.add("w3-sand");
         }
+
+        function deleteElection(){
+            const id = document.getElementById('election-id').innerText;
+            fetch(`/delete-election/${id}`,{
+                method:"DELETE"
+            }).then(res=>{
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.text();
+            }).then(data=>{
+                console.log('Success:', data);
+                showFeedback();
+            })
+        }
     </script>
 
     <% if(feedback !== "") {%>
@@ -123,6 +138,13 @@
         setTimeout(()=>{
             fd.style.display="none"
         }, 10000);
+        function showFeedback(){
+            feedback.innerText ="Profile Updated";
+            feedback.style.display = 'block';
+            setTimeout(()=>{
+            fd.style.display="none"
+        }, 10000);
+        }
     </script>
     <% } %>
 </div>

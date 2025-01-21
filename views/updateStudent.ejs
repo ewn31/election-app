@@ -1,32 +1,86 @@
 <%- include('partials/htmlhead') -%>
 <div class="full-height w3-padding">
     <div class="w3-card w3-container  w3-round w3-white w3-padding-32" style="width: 630px; margin:auto;">
-        <form action="/update-student" method="POST" class="w3-padding ">
             <div class="w3-margin"><h2>Modify Profile Details</h2></div>
             <div class="w3-margin">
                 <label for="matricule">matricule</label>
-                <input type="text" class="w3-input w3-border w3-round" name="matricule" id="" <%-`value=${data.MATRICULE}` -%> required>
+                <input type="text" class="w3-input w3-border w3-round" name="matricule" id="matricule" <%-`value=${data.MATRICULE}` -%> required>
             </div>
             <div class="w3-margin">
                 <label for="name">name</label>
-                <input type="text" class="w3-input w3-border w3-round" name="name" id="" <%-`value=${data.NAME}` -%> required>
+                <input type="text" class="w3-input w3-border w3-round" name="name" id="name" <%-`value=${data.NAME}` -%> required>
             </div>
             <div class="w3-margin">
                 <label for="faculty">faculty</label>
-                <input type="text" class="w3-input w3-border w3-round" name="faculty" id="" <%-`value=${data.FACULTY}` -%>>
+                <input type="text" class="w3-input w3-border w3-round" name="faculty" id="faculty" <%-`value=${data.FACULTY}` -%>>
             </div>
             <div class="w3-margin">
                 <label for="department">department</label>
-                <input type="text" class="w3-input w3-border w3-round" name="department" id="" <%-`value=${data.DEPARTMENT}` -%>>
+                <input type="text" class="w3-input w3-border w3-round" name="department" id="department" <%-`value=${data.DEPARTMENT}` -%>>
             </div>
             <div class="w3-margin">
                 <label for="password">password</label>
-                <input type="password" class="w3-input w3-border w3-round" name="password" id="" required>
+                <input type="password" class="w3-input w3-border w3-round" name="password" id="password" required>
             </div>
             <div class="w3-margin">
-                <input type="submit" class="w3-input w3-round w3-deep-orange" value="Modify">
+                <input type="submit" class="w3-input w3-round w3-deep-orange" onclick="update()" id="submitBtn" value="Modify">
             </div>
-        </form>
     </div>
 </div>
+
+<div id="feedback" class="w3-panel w3-center w3-animate-bottom w3-black" style="position: absolute; bottom:15%; width:100%; display:none"></div>
+
+    <script>
+        function showFeedback(){
+            const fd = document.getElementById("feedback");
+            feedback.innerText ="Profile Updated";
+            feedback.style.display = 'block';
+            setTimeout(()=>{
+            fd.style.display="none"
+        }, 10000);
+        }
+    </script>
+
+<script>
+    function update(){
+        const matricule = document.getElementById('matricule').value
+        const name = document.getElementById('name').value
+        const faculty = document.getElementById('faculty').value
+        const department = document.getElementById('department').value
+        const password = document.getElementById('password').value
+
+        console.log(department);
+
+        const data = new URLSearchParams({
+            matricule: matricule,
+            name: name,
+            faculty: faculty,
+            department: department,
+            password: password
+        });
+        
+        fetch('/update-student', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: data
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log('Success:', data);
+            showFeedback()
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        
+        
+    }
+</script>
 <%- include('partials/htmlfoot') -%>
