@@ -1,0 +1,6 @@
+#Ignore the following files
+
+#Ingnore node modules
+node_modules/*
+interview-questions-frontend/*
+

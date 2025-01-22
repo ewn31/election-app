@@ -40,9 +40,11 @@ appRouter.post('/', (req, res)=>{
                         console.log(error);
                     }
                 })();
-                res.cookie("session", token);
-                res.cookie("user", req.body.matricule);
-                res.redirect(`/student/${req.body.matricule}`);}
+                res.cookie("token", token);
+                res.setHeader('authorization', token);
+                //res.cookie("user", req.body.matricule);
+                res.redirect(`/student/${req.body.matricule}`);
+                }
             else res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
         } catch (error) {
             console.log(error)
@@ -68,9 +70,11 @@ appRouter.post('/admin', (req, res)=>{
                 }
             })();
             if (accessGranted){
-                res.cookie("session", token);
-                res.cookie("user", user); 
-                res.redirect("/elections");
+                res.cookie("token", token);
+                //res.cookie("user", user); 
+                //set Authorization Header
+                res.setHeader('authorization', token);
+                res.redirect("/admin/elections");
             }
             else res.redirect('/admin');
         } catch (error) {
@@ -335,7 +339,7 @@ appRouter.put('/update-student', (req, res)=>{
             //if(req.cookies.user === req.body.matricule){
             console.log('In update student',req.body)
             await updateStudent(req.body)
-            res.send('profile modified')
+            res.status(201).send('profile modified')
             //}else res.send('forbidden');
         } catch (error) {
             console.log(error)
