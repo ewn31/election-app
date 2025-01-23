@@ -5,20 +5,6 @@ const {verifyToken, generateToken} = require('../lib/token');
 //const session = require("express-session");
 
 const appRouter = express.Router();
-//function to verify the id if users for protected routes
-/*async function verifyUserId(res, id, token) {
-        try {
-            const authinfo = await getAuthInfo(id);
-            console.log("in verify user", id, token, authinfo);
-            if(authinfo === null) res.send('forbidden');
-            else if((authinfo.USER === id) && (authinfo.TOKEN === token)) next()
-            else{
-                res.send('forbidden')
-            }
-        } catch (error) {
-            console.log(error)
-        }
-}*/
 
 // login route
 appRouter.get('/', (req, res)=>{
@@ -37,18 +23,10 @@ appRouter.post('/', (req, res)=>{
                     password: req.body.password,
                 }
                 const token = generateToken(user);
-                /*(async () => {
-                    try {
-                        await addAuthinfo({token:token, user:user});
-                    } catch (error) {
-                        console.log(error);
-                    }
-                })();*/
+        
                 res.cookie("token", token, {httpOnly: true});
                 res.setHeader('Authorization', token);
                 res.send('Successfully Logged in')
-                //res.cookie("user", req.body.matricule);
-                //res.redirect(`/student/${req.body.matricule}`);
                 }
             else res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
         } catch (error) {
@@ -71,19 +49,13 @@ appRouter.post('/admin', (req, res)=>{
                 password: req.body.password
             }
             const token =  generateToken(user);
-            /*(async () => {
-                try {
-                    await addAuthinfo({token:token, user:user});
-                } catch (error) {
-                    console.log(error);
-                }
-            })();*/
+            
             if (accessGranted){
                 res.cookie("token", token, {httpOnly: true});
                 //res.cookie("user", user); 
                 //set Authorization Header
-                res.setHeader('authorization', token);
-                res.redirect("/admin/elections");
+                res.setHeader('Authorization', token);
+                res.send('Admin Successfully loggged in')
             }
             else res.redirect('/admin');
         } catch (error) {
