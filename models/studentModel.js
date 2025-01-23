@@ -24,7 +24,7 @@ Student.init({
         allowNull: false
     },
     hashed_password:{
-        type: Sequelize.STRING(64),
+        type: Sequelize.BLOB,
     }
 },
 {

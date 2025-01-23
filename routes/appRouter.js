@@ -6,7 +6,7 @@ const {verifyToken, generateToken} = require('../lib/token');
 
 const appRouter = express.Router();
 //function to verify the id if users for protected routes
-async function verifyUserId(res, id, token) {
+/*async function verifyUserId(res, id, token) {
         try {
             const authinfo = await getAuthInfo(id);
             console.log("in verify user", id, token, authinfo);
@@ -18,7 +18,7 @@ async function verifyUserId(res, id, token) {
         } catch (error) {
             console.log(error)
         }
-}
+}*/
 
 // login route
 appRouter.get('/', (req, res)=>{
@@ -31,16 +31,20 @@ appRouter.post('/', (req, res)=>{
             const accessGranted = await verifyUser(req.body);
             console.log(accessGranted);
             if (accessGranted) {
-                const user = req.body.matricule;
+                const user = {
+                    user: req.body.matricule,
+                    isAdmin: false,
+                    password: req.body.password,
+                }
                 const token = generateToken(user);
-                (async () => {
+                /*(async () => {
                     try {
                         await addAuthinfo({token:token, user:user});
                     } catch (error) {
                         console.log(error);
                     }
-                })();
-                res.cookie("token", token);
+                })();*/
+                res.cookie("token", token, {httpOnly: true});
                 res.setHeader('authorization', token);
                 //res.cookie("user", req.body.matricule);
                 res.redirect(`/student/${req.body.matricule}`);
@@ -60,17 +64,21 @@ appRouter.post('/admin', (req, res)=>{
     (async ()=>{
         try {
             const accessGranted = await verifyAdmin(req.body);
-            const user = req.body.username;
+            const user = {
+                user: req.body.username,
+                isAdmin: true,
+                password: req.body.password
+            }
             const token =  generateToken(user);
-            (async () => {
+            /*(async () => {
                 try {
                     await addAuthinfo({token:token, user:user});
                 } catch (error) {
                     console.log(error);
                 }
-            })();
+            })();*/
             if (accessGranted){
-                res.cookie("token", token);
+                res.cookie("token", token, {httpOnly: true});
                 //res.cookie("user", user); 
                 //set Authorization Header
                 res.setHeader('authorization', token);

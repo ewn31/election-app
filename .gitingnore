@@ -3,4 +3,5 @@
 #Ingnore node modules
 node_modules/*
 interview-questions-frontend/*
+node_modules/.package-lock.json
 
