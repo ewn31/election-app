@@ -45,9 +45,10 @@ appRouter.post('/', (req, res)=>{
                     }
                 })();*/
                 res.cookie("token", token, {httpOnly: true});
-                res.setHeader('authorization', token);
+                res.setHeader('Authorization', token);
+                res.send('Successfully Logged in')
                 //res.cookie("user", req.body.matricule);
-                res.redirect(`/student/${req.body.matricule}`);
+                //res.redirect(`/student/${req.body.matricule}`);
                 }
             else res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
         } catch (error) {
