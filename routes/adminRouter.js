@@ -1,7 +1,41 @@
 const express = require('express');
 const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate } = require('../Database/electionDB');
+const {addAdmin, updateAdmin, getAdmin} = require('../Database/adminDb');
 
 const adminRouter = express.Router();
+
+adminRouter.post('/add', (req, res)=>{
+    try {
+        (async () => {
+           await addAdmin(req.body)
+           res.send('Admin added');
+        })()
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+adminRouter.put('/update', (req, res)=>{
+    try {
+        (async () => {
+           await updateAdmin(id, data);
+           res.status(201).send('Admin updated succesfully');
+        })()
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+adminRouter.get('/get/:username', (req, res)=>{
+    try {
+        (async () => {
+           const admin = await getAdmin(req.params.username);
+           res.json(admin); 
+        })()
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 adminRouter.post('/election', (req, res)=>{
     (async () => {
