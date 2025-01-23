@@ -25,7 +25,7 @@ appRouter.post('/', (req, res)=>{
                 const token = generateToken(user);
         
                 res.cookie("token", token, {httpOnly: true});
-                res.setHeader('Authorization', token);
+                res.setHeader('Authorization','Bearer ' + token);
                 res.send('Successfully Logged in')
                 }
             else res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
@@ -52,9 +52,7 @@ appRouter.post('/admin', (req, res)=>{
             
             if (accessGranted){
                 res.cookie("token", token, {httpOnly: true});
-                //res.cookie("user", user); 
-                //set Authorization Header
-                res.setHeader('Authorization', token);
+                res.setHeader('Authorization','Bearer '+ token);
                 res.send('Admin Successfully loggged in')
             }
             else res.redirect('/admin');
