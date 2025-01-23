@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const cfg = {
     port:3000,
     url:"localhost",
+    unproctedRoutes:['/', '/admin', '/register']
 }
 const port = process.env.PORT
 
@@ -26,7 +27,7 @@ app.use(cookieParser());
 
 app.use(express.static('static'));
 
-app.use(verifyUser)
+app.use(verifyUser);
 
 app.use('/student', studentRouter);
 
