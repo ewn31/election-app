@@ -1,0 +1,1 @@
+var spinnerTemplate = `<div class="spinner"></div>`

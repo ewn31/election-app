@@ -10,14 +10,15 @@ async function addAdmin(data){
     await Admin.create(data);
 }
 
-async function getAdmin(username) {
+async function getAdmin(user_name) {
+    console.log('Getting Admin')
     try {
-        const admin = await Admin.findAll({
+        const admin = await Admin.findOne({
             where:{
-                username:username,
+                username:user_name,
             }
         })
-        return admin;
+        return {id:`${admin.id}`, username:`${admin.username}`, hashed_password:`${admin.hashed_password}`};
     } catch (error) {
        console.log(error);
     }
@@ -25,7 +26,7 @@ async function getAdmin(username) {
 
 async function updateAdmin(id,data){
     try {
-        Admin.update(data,
+        await Admin.update(data,
             {
             where:{
                 id:id

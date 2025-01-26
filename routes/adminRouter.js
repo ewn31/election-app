@@ -1,8 +1,37 @@
 const express = require('express');
+const {generateToken} =  require('../lib/token')
 const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate } = require('../Database/electionDB');
 const {addAdmin, updateAdmin, getAdmin} = require('../Database/adminDb');
+const hashPassword = require('../lib/hash');
 
 const adminRouter = express.Router();
+
+adminRouter.post('/', (req, res)=>{
+    const {username, password} = req.body
+    const hashed_password = hashPassword(password)
+    try {
+        (async ()=>{
+            const data = await getAdmin(username);
+            console.log(data, hashed_password);
+            if(data.hashed_password !== hashed_password){
+                return res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
+            }
+            const user = {
+                user: req.body.username,
+                isAdmin: true,
+                password: req.body.password
+            }
+            const token =  generateToken(user);
+            res.cookie("token", token, {httpOnly: true});
+            res.setHeader('Authorization','Bearer '+ token);
+            res.send('Admin Successfully loggged in')
+            
+        })()
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
 
 adminRouter.post('/add', (req, res)=>{
     try {

@@ -1,17 +1,54 @@
 const { Op } = require('sequelize');
-const {Election, Candidate} = require ('../models/electionModel');
+const {Election, Candidate, Vote} = require ('../models/electionModel');
+const Student = require('../models/studentModel');
 
 async function getElections() {
     const current_date = Date.now();
     try {
         const elections = await Election.findAll({
             where: {
-                start_date:{
-                    [Op.gt]: current_date,
+                end_date:{
+                    [Op.gte]: current_date,
                 }
             },
             })
             return elections
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getStudentElections(id){
+    const current_date = Date.now();
+    try {
+        const [student] =  await Student.findAll({
+            where:{
+                matricule:id
+            }
+        })
+        const elections = await Election.findAll({
+            where: {
+                end_date:{
+                    [Op.gte]: current_date,
+                },
+                start_date:{
+                    [Op.lte]: current_date
+                },
+                scope:{
+                    [Op.or]: ['School', student.faculty, student.department ]
+                }
+            },
+            })
+
+        const votedAlready =  await Vote.findAll({
+            where:{
+                matricule:id
+            }
+        })
+        if(votedAlready.length === 0) return elections;
+        let VotedAlreadyId = votedAlready.forEach(e=>e.election_id)
+        let validElections = elections.filter(e=>!(VotedAlreadyId.includes(e.id)))
+        return validElections
     } catch (error) {
         console.log(error)
     }
@@ -101,6 +138,26 @@ async function updateCandidate(id, data) {
     }
 }
 
+
+async function updateCandidateVote(id, data) {
+    for(let position of data){
+        let {matricule} = position
+        try {
+            await Candidate.increment('vote_count',{
+                where:{
+                    election_id:id,
+                    matricule: matricule,
+                    position:position
+                }
+            }
+            )
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+}
+
 async function deleteCandidate(id, matricule) {
     try {
         await Candidate.destroy({
@@ -114,4 +171,4 @@ async function deleteCandidate(id, matricule) {
     }
 }
 
-module.exports = {createElection, getElections, getElection, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate,}
+module.exports = {createElection, getStudentElections, getElection,getElections, updateCandidateVote, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate,}

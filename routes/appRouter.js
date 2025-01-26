@@ -16,9 +16,10 @@ appRouter.post('/', (req, res)=>{
         try {
             const accessGranted = await verifyUser(req.body);
             console.log(accessGranted);
+            const mat = req.body.matricule
             if (accessGranted) {
                 const user = {
-                    user: req.body.matricule,
+                    user: mat,
                     isAdmin: false,
                     password: req.body.password,
                 }
@@ -26,7 +27,7 @@ appRouter.post('/', (req, res)=>{
         
                 res.cookie("token", token, {httpOnly: true});
                 res.setHeader('Authorization','Bearer ' + token);
-                res.send('Successfully Logged in')
+                res.render('student',{title:'student', matricule:mat, election:{}, data:{}, feedback:'' })
                 }
             else res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
         } catch (error) {
