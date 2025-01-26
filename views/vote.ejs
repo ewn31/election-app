@@ -5,17 +5,17 @@
             <h2>Election</h2>
             <p>Submit form to vote</p>            
         </div>
-        <form action=<%=`/vote/${id}-${matricule}` %> method="post" class="w3-padding ">
-            <% for (const position in candidates) {  %>
+        <form action=<%=`/student/${matricule}/vote/${id}` %> method="post" class="w3-padding ">
+            <% for (let position in candidates) {  %>
                 <div class="w3-margin">
                 <label for="position"><h3><%=position %><h3></label></div>
-                <% for(const candidate of candidates[position]) { %>
-                <input type="radio" name=<%=position %> id="" value=<%=candidate %> class="w3-radio">
-                <label for=<%=candidate %> > <%=candidate %> </label>
+                <% for(let candidate of candidates[position]) { %>
+                <input type="radio" name=<%=position %> id="" value=<%=`${candidate.name}` %> class="w3-radio">
+                <label for=<%=candidate %> > <%=candidate.name %> </label>
                 <% } %>
             <% } %>
             <div class="w3-margin">
-                <input type="submit" class="w3-input w3-round w3-button w3-deep-orange" <% if(candidates.length === 0){ %><%=`disabled` %><% } %> value="vote">
+                <input type="submit" class="w3-input w3-round w3-button w3-deep-orange" <% if(!candidates){ %><%=`disabled` %><% } %> value="vote">
             </div>
         </form>
     </div>

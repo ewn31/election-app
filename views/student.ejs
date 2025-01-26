@@ -83,14 +83,26 @@
             (async () => {
             await showComponent(url, 'GET', {}, 'election-data', spinnerTemplate, (elections)=>{
                 let html = ''
+                console.log(elections)
                 if(elections.length === 0){
                     return html += 'No Elections'
                 }
                 for(let election of elections){
                     html += '<tr>'
                     for (let detail in election) {
-                    html += `<td>${detail}: ${election[detail]}</td>`;
-                }
+                    if(detail === 'id'){
+                        var votingUrl = `/student/<%=matricule%>/vote/${election.id}` 
+        
+                    }else if(detail === 'name'){
+                        html += `<td><a href=${votingUrl}>${election[detail]}</a></td>`
+                    }
+
+                    else if(detail === 'createdAt' || detail === 'updatedAt'){
+                        continue;
+                    }
+                    else{
+                    html += `<td> ${election[detail]}</td>`;
+                }}
                 html += '</tr>'
                 }
                 

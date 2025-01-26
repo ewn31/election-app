@@ -44,7 +44,7 @@ Candidate.init({
     id:{
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique:true,
+        unique: true,
         primaryKey: true,
         autoIncrement: true,
     },
@@ -56,6 +56,10 @@ Candidate.init({
             key: 'matricule'
         },
         unique:true,
+    },
+    name:{
+        type: Sequelize.STRING,
+        allowNull:false,
     },
     election_id:{
         type: Sequelize.INTEGER,
@@ -91,8 +95,10 @@ class Vote extends Sequelize.Model{
 Vote.init({
     id:{
         type: Sequelize.INTEGER,
-        primaryKey:true,
+        allowNull: false,
         unique:true,
+        primaryKey: true,
+        autoIncrement: true,
     },
     election_id:{
         type: Sequelize.INTEGER,
@@ -122,7 +128,7 @@ Vote.init({
 )
 
 async function syncModel() {
-    await sequelize.sync();
+    await sequelize.sync({alter:true});
 
 }
 

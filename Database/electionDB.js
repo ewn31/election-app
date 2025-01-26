@@ -46,7 +46,7 @@ async function getStudentElections(id){
             }
         })
         if(votedAlready.length === 0) return elections;
-        let VotedAlreadyId = votedAlready.forEach(e=>e.election_id)
+        let VotedAlreadyId = votedAlready.map(e=>e.election_id)
         let validElections = elections.filter(e=>!(VotedAlreadyId.includes(e.id)))
         return validElections
     } catch (error) {
@@ -140,20 +140,31 @@ async function updateCandidate(id, data) {
 
 
 async function updateCandidateVote(id, data) {
-    for(let position of data){
-        let {matricule} = position
+    console.log(data)
+    for(let position in data){
+        let name = data[position];
         try {
-            await Candidate.increment('vote_count',{
-                where:{
-                    election_id:id,
-                    matricule: matricule,
+            await Candidate.increment('vote_count', {
+                by: 1,
+                where: {
+                    election_id: id,
+                    name:name,
                     position:position
                 }
-            }
-            )
+            });
         } catch (error) {
             console.log(error);
         }
+    }
+    
+}
+
+async function registerVote(matricule, id){
+    const voteTime = Date.now()
+    try {
+        await Vote.create({election_id:id, matricule, vote_time:voteTime})
+    } catch (error) {
+        console.log(error)
     }
     
 }
@@ -171,4 +182,4 @@ async function deleteCandidate(id, matricule) {
     }
 }
 
-module.exports = {createElection, getStudentElections, getElection,getElections, updateCandidateVote, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate,}
+module.exports = {createElection, getStudentElections, getElection,getElections, updateCandidateVote, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate, registerVote}

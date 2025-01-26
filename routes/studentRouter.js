@@ -1,5 +1,5 @@
 const express = require('express');
-const {getStudentElections, getCandidates, updateCandidateVote} = require('../Database/electionDB')
+const {getStudentElections, getCandidates, updateCandidateVote, registerVote} = require('../Database/electionDB')
 const {getStudent, updateStudent, addStudent} = require('../Database/studentDb');
 
 const studentRouter = express.Router();
@@ -58,11 +58,41 @@ studentRouter.put('/:id', (req, res)=>{
     }
 })
 
+async  function verifyIfEligibleElection(res, mat, id){
+    const elections = await getStudentElections(mat)
+    const election_ids = elections.map(e => e.id)
+        try {
+            if(!(election_ids.includes(parseInt(id)))) res.status(401).send('forbidden')
+        } catch (error) {
+            console.log(error)
+            res.status(401).send('forbidden')
+        }
+}
+
 studentRouter.get('/:matricule/vote/:id', (req, res)=>{
+    const mat = req.params.matricule
+    const election_id = req.params.id
     try {
         (async () => {
-            const candidates = await getCandidates(req.params.id)
-            res.json(candidates)
+            await verifyIfEligibleElection(res, mat, election_id)
+            const candidates = await getCandidates(election_id)
+            try {
+                if(candidates.length !== 0){
+                    var positions = {}
+                    candidates.forEach((e)=>{
+                        if(Object.keys(candidates).includes(e.position)){
+                            positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
+                        }else{
+                            positions[e.position] = []
+                            positions[e.position].push({id:e.id, name:e.name})
+                        }
+                    })
+                }
+                console.log(positions)
+            } catch (error) {
+              console.log(error)   
+            }
+            res.render('vote', {title:`Vote`,matricule:mat, id:election_id, candidates:positions})
         })()
     } catch (error) {
         console.log(error)
@@ -70,10 +100,14 @@ studentRouter.get('/:matricule/vote/:id', (req, res)=>{
     }
 })
 
-studentRouter.post('/:matricule/vote/:id', (res, req)=>{
+studentRouter.post('/:matricule/vote/:id', (req, res)=>{
+    const mat = req.params.matricule;
+    const election_id = req.params.id
     try {
         (async () => {
+            await verifyIfEligibleElection(res, mat, election_id)
             await updateCandidateVote(req.params.id, req.body)
+            await registerVote(mat, election_id);
             res.send('Vote registered')
         })()
     } catch (error) {

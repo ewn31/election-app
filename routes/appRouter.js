@@ -277,6 +277,9 @@ appRouter.get("/logout", (req, res)=>{
     if(req.cookies.n){
         res.clearCookie('n')
     }
+    if(req.cookies.token){
+        res.clearCookie('token')
+    }
     res.redirect("/");
 })
 /*appRouter.all("/uploads", (req, res)=>{
