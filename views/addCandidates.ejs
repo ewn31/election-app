@@ -3,7 +3,6 @@
     <header class="w3-container">
         <div class="w3-bar w3-deep-orange">
             <a class="w3-bar-item w3-right" href="/logout">Log out</a>
-            <a class="w3-bar-item w3-right" href="">Profile</a>
         </div>
         <nav class="w3-bar">
             <button class="w3-bar-item w3-button tab-btn w3-sand" onclick="showSection('add-candidate', 'add-candidate-btn');" id="add-candidate-btn">Add Candidate</button>
@@ -49,7 +48,7 @@
                     const id = document.getElementById('elections_id').value;
 
                     try {
-                        const response = await fetch(`/admin/election/${id}/candidates`, {
+                        const response = await fetch(`/admin/election/${id}/candidate`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
