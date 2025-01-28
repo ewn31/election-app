@@ -17,7 +17,7 @@ adminRouter.post('/', (req, res)=>{
             }
             console.log(data, hashed_password);
             if(data.hashed_password !== hashed_password){
-                return res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
+                return res.render("admin",{title:"login", message:"incorrect username or password", feedback:""})
             }
             const user = {
                 user: req.body.username,

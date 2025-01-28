@@ -20,6 +20,36 @@ studentRouter.get('/:id', (req, res)=>{
     })()
 })
 
+studentRouter.post('/', (req, res)=>{
+    const {matricule, password} = req.body
+    const hashed_password = hashPassword(password)
+    try {
+        (async ()=>{
+            const data = await getStudent(matricule);
+            if(!data){
+                return res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
+            }
+            console.log(data, hashed_password);
+            if(data.hashed_password !== hashed_password){
+                return res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
+            }
+            const user = {
+                user: req.body.username,
+                isAdmin: false,
+                password: req.body.password
+            }
+            const token =  generateToken(user);
+            res.cookie("token", token, {httpOnly: true});
+            res.setHeader('Authorization','Bearer '+ token);
+            res.render('student',{title:'student', matricule:mat, election:{}, data:{}, feedback:'' })
+            
+        })()
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error')
+    }
+})
+
 studentRouter.get('/:id/elections', (req,res)=>{
     try {
         (async () => {
