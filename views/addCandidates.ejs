@@ -2,7 +2,6 @@
 <div class="w3-deep-orange">
     <header class="w3-container">
         <div class="w3-bar w3-deep-orange">
-            <a href="/elections" class="w3-bar-item">Back</a>
             <a class="w3-bar-item w3-right" href="/logout">Log out</a>
             <a class="w3-bar-item w3-right" href="">Profile</a>
         </div>
@@ -15,8 +14,8 @@
         <div class="w3-card w3-col s12 m12 l9 w3-sand w3-round w3-container" style="box-shadow: none;">
             <div class="full-height content-section active" id="add-candidate">
                 <div class="w3-container form-padding w3-round">
-                <h2 class="w3-margin"><%=name %> Candidate Form</h2>
-                <form action=<%=link %> method="POST" class="w3-padding">
+                <h2 class="w3-margin"><%=election_name %> Candidate Form</h2>
+                <form action='' method="POST" class="w3-padding">
                     <div class="w3-margin">
                         <label for="matricule">Matricule</label>
                         <input type="text" id="matricule" name="matricule" class="w3-input w3-border w3-round" maxlength="8" required>
@@ -27,11 +26,11 @@
                     </div>
                     <div class="w3-margin" style="display: none;">
                         <label for="elections_id" class="form-label">Elections ID</label>
-                        <input type="number" id="elections_id" value="<%=id %>" name="election_id" class="form-control" placeholder="Enter Elections ID" required>
+                        <input type="number" id="elections_id" value="<%=election_id %>" name="election_id" class="form-control" placeholder="Enter Elections ID" required>
                     </div>
                     <div class="w3-margin" style="display: none;">
                         <label for="election_name" class="form-label">Election Name</label>
-                        <input type="text" id="election_name" value="<%=name.replace(' ', '-') %>" name="election_name" class="form-control" placeholder="Enter Election Name" maxlength="60" required>
+                        <input type="text" id="election_name" value="<%=election_name%>" name="election_name" class="form-control" placeholder="Enter Election Name" maxlength="60" required>
                     </div>
                     <div class="w3-margin">
                         <label for="position" class="form-label">Position</label>
@@ -41,13 +40,38 @@
                     <input type="submit" class="w3-input w3-round w3-deep-orange" value="submit">
                     </div>
                 </form>
+            <script>
+                document.querySelector('form').addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const form = event.target;
+                    const data = new FormData(form);
+                    const formDataObj = Object.fromEntries(data.entries());
+                    const id = document.getElementById('elections_id').value;
+
+                    try {
+                        const response = await fetch(`/admin/election/${id}/candidates`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formDataObj)
+                        });
+
+                        const result = await response.text();
+                        alert(result);
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while submitting the form.');
+                    }
+                });
+            </script>
             </div>
             </div>
             <div class="content-section" id="candidate-list">
                 <div class="w3-margin">
                     <h3>Candidates</h3>
                 </div>
-                <div id="election-id" style="display:none ;"><%=id %></div>
+                <div id="election-id" style="display:none ;"><%=election_id %></div>
                 <script>
                     function showCandidates(){
                     const list = document.getElementById("candidate-list-container");
@@ -56,7 +80,7 @@
                     async function getCandidates(){
 
                         try{
-                        const response = await fetch(`/candidates/${id}`);
+                        const response = await fetch(`/admin/election/${id}/candidates`);
                         console.log(response);
                         const candidates = await response.json();
                         console.log(candidates);
@@ -65,7 +89,7 @@
                             for(let position in candidates){
                                 listHtml+=`<li><h3>${position}</h3></li>`
                                 for(let candidate of candidates[position]){
-                                    listHtml+=`<li>${candidate}</li>`
+                                    listHtml+=`<li>${candidate.name}</li>`
                                 }
                             }
                             listHtml+=`</ul>`
@@ -98,22 +122,26 @@
         </div>
     </div>
     <% if(feedback !== "") {%>
-        <% if(feedback === true) { %>
-    <div id="feedback" class="w3-panel w3-center w3-animate-bottom w3-green" style="position: absolute; bottom:15%; width:100%;">Added New Candidate Succesfully</div>
-    <% } else if(feedback === false) { %>
-        <div id="feedback" class="w3-panel w3-center w3-animate-bottom w3-red" style="position: absolute; bottom:15%; width:100%;">Adding New Candidate Failed</div>
-        <% } else {%>
-            <div id="feedback" class="w3-panel w3-center w3-animate-bottom w3-red" style="position: absolute; bottom:15%; width:100%;"><%=feedback %></div>
-            <% } %>
-    <script>
-        const fd = document.getElementById("feedback");
-        setTimeout(()=>{
-            fd.style.display="none"
-        }, 10000);
-    </script>
-    <% } %>
+        
+        <div id="feedback" class="w3-panel w3-center w3-animate-bottom w3-black" style="position: absolute; bottom:15%; width:100%;"><%=feedback %></div>
+    
+        <script>
+            const fd = document.getElementById("feedback");
+            setTimeout(()=>{
+                fd.style.display="none"
+            }, 10000);
+            function showFeedback(msg){
+                feedback.innerText = msg;
+                feedback.style.display = 'block';
+                setTimeout(()=>{
+                fd.style.display="none"
+            }, 10000);
+            }
+        </script>
 
-    </div>
+        <% } %>
+
+
 
 
     <script>

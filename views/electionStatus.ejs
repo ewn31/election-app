@@ -1,7 +1,7 @@
 <%- include('partials/htmlhead') -%>
 <header class="w3-container">
     <div class="w3-bar w3-deep-orange">
-        <a class="w3-bar-item" href="/elections">Back</a>
+        <a class="w3-bar-item" href="/admin">Back</a>
         <a class="w3-bar-item w3-right" href="/logout">Log out</a>
     </div>
     <nav class="w3-bar">
@@ -9,12 +9,12 @@
 </header>
     <div class="w3-container w3-padding w3-center">
         <table class="w3-card w3-sand w3-table w3-bordered" style="max-width: 400px;">
-            <% for (const position in data) {  %>
+            <% for (const position in positions) {  %>
                 <tr><th><%=position %></th></tr>
-                <% for(const candidate of data[position]) { %>
+                <% for(const candidate of positions[position]) { %>
                     <tr>
-                        <td><%=candidate.n %></td>
-                        <td><%=candidate.count %></td>
+                        <td><%=candidate.name %></td>
+                        <td><%=candidate.votes %></td>
                     </tr>
                 <% } %>
             <% } %>

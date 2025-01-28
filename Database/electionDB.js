@@ -182,4 +182,17 @@ async function deleteCandidate(id, matricule) {
     }
 }
 
-module.exports = {createElection, getStudentElections, getElection,getElections, updateCandidateVote, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate, registerVote}
+async function getElectionResults(id){
+    try {
+        const candidates = await Candidate.findAll({
+            where:{
+                election_id:id
+            }
+        })
+        return candidates
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = {createElection, getStudentElections, getElection,getElections, getElectionResults, updateCandidateVote, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate, registerVote}

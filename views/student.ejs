@@ -12,7 +12,7 @@
 
 <div class="w3-row">
     <div class="w3-card w3-col s12 m12 l9 w3-sand w3-round w3-container w3-padding" style="box-shadow: none;">
-        <table class="w3-table w3-bordered full-height content-section active" style="min-height: 300px; width:100%;" id="current-elections">
+        <table class="w3-table w3-bordered full-height content-section active overflow" style="min-height: 300px; width:100%;" id="current-elections">
                         <thead>
                             <th>NAME</th>
                             <th>TYPE</th>
@@ -67,6 +67,9 @@
                 let html = '<li><h3>Profile Details<h3></li>'
                 console.log(data);
                 for (let detail in data) {
+                    if(detail === 'createdAt' || detail === 'updatedAt' || detail === 'hashed_password'){
+                        continue;
+                    }
                     html += `<li>${detail}: ${data[detail]}</li>`;
                 }
                 return html
@@ -95,6 +98,8 @@
         
                     }else if(detail === 'name'){
                         html += `<td><a href=${votingUrl}>${election[detail]}</a></td>`
+                    }else if(detail === 'start_date'  || detail === 'end_date'){
+                        html += `<td>${new Date(election[detail]).toDateString()}</td>`
                     }
 
                     else if(detail === 'createdAt' || detail === 'updatedAt'){

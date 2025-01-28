@@ -259,9 +259,9 @@ appRouter.get("/candidates/:id", (req, res) =>{
     })();
 })
 appRouter.get("/logout", (req, res)=>{
-    (async () => {
-        await deleteAuthinfo(req.cookies.user);
-    })()
+    //(async () => {
+       //   await deleteAuthinfo(req.cookies.user);
+    //})()
     if(req.cookies.session){
         res.clearCookie("session");
     }

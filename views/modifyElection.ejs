@@ -45,5 +45,36 @@
                 <input type="submit" class="w3-input w3-button w3-round w3-deep-orange" value="Modify">
                 </div>
         </form>
+<script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const electionId = '<%= election.ID %>';
+        const reqBody = {
+            name: document.querySelector('input[name="name"]').value,
+            type: document.querySelector('select[name="type"]').value,
+            scope: document.querySelector('input[name="scope"]').value,
+            startDate: document.querySelector('input[name="startDate"]').value,
+            endDate: document.querySelector('input[name="endDate"]').value
+        };
+
+        fetch(`/elections/${electionId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: reqBody
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Handle success
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            // Handle error
+            console.error('Error:', error);
+        });
+    });
+</script>
 </div>
 <%- include('partials/htmlfoot'); -%>

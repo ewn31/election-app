@@ -1,6 +1,6 @@
 const express = require('express');
 const {generateToken} =  require('../lib/token')
-const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate } = require('../Database/electionDB');
+const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate, getElectionResults } = require('../Database/electionDB');
 const {addAdmin, updateAdmin, getAdmin} = require('../Database/adminDb');
 const hashPassword = require('../lib/hash');
 
@@ -12,6 +12,9 @@ adminRouter.post('/', (req, res)=>{
     try {
         (async ()=>{
             const data = await getAdmin(username);
+            if(!data){
+                return res.render("admin",{title:"login", message:"incorrect username or password", feedback:""})
+            }
             console.log(data, hashed_password);
             if(data.hashed_password !== hashed_password){
                 return res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
@@ -24,7 +27,7 @@ adminRouter.post('/', (req, res)=>{
             const token =  generateToken(user);
             res.cookie("token", token, {httpOnly: true});
             res.setHeader('Authorization','Bearer '+ token);
-            res.send('Admin Successfully loggged in')
+            res.render('elections', {title:'Admin', feedback:'Welcome'})
             
         })()
     } catch (error) {
@@ -127,11 +130,37 @@ adminRouter.delete('/election/:id', (req, res)=>{
     }
 })
 
+adminRouter.get('/election/:id/addCandidate', (req, res)=>{
+    try {
+        (async () => {
+           const election = await getElection(req.params.id);
+           const {id, name} = election[0]
+           console.log(election)
+           res.render('addCandidates',{title:'Candidates', election_name:name, election_id:id, feedback:"Add Candidates"}) 
+        })()
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 adminRouter.get("/election/:id/candidates", (req, res)=>{
     try {
         (async () => {
            const candidates = await getCandidates(req.params.id);
-           res.json(candidates); 
+           if(candidates.length !== 0){
+            var positions = {}
+            candidates.forEach((e)=>{
+                if(Object.keys(candidates).includes(e.position)){
+                    positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
+                }else{
+                    positions[e.position] = []
+                    positions[e.position].push({name:e.name, votes:e.vote_count})
+                }
+            })
+        }else{
+            var positions = {}
+        }
+           res.json(positions); 
         })()
     } catch (error) {
         console.log(error);
@@ -170,6 +199,30 @@ adminRouter.delete("/elections/:id/candidate/:matricule", (req, res)=>{
        })()
     } catch (error) {
         console.log(error);
+    }
+})
+adminRouter.get('/elections/:electionId/status', (req, res)=>{
+    const electionId = req.params.electionId;
+    try {
+        (async () => {
+           const candidates = await getElectionResults(electionId)
+           if(candidates.length !== 0){
+            var positions = {}
+            candidates.forEach((e)=>{
+                if(Object.keys(candidates).includes(e.position)){
+                    positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
+                }else{
+                    positions[e.position] = []
+                    positions[e.position].push({name:e.name, votes:e.vote_count})
+                }
+            })
+        }else{
+            var positions = {}
+        }
+        res.render('electionStatus', {title:'election status', positions})
+        })()
+    } catch (error) {
+        console.log(error)
     }
 })
 module.exports = adminRouter;

@@ -15,7 +15,7 @@
                 <% } %>
             <% } %>
             <div class="w3-margin">
-                <input type="submit" class="w3-input w3-round w3-button w3-deep-orange" <% if(!candidates){ %><%=`disabled` %><% } %> value="vote">
+                <input type="submit" class="w3-input w3-round w3-button w3-deep-orange" <% if((!candidates)||(Object.keys(candidates).length === 0)){ %><%=`disabled` %><% } %> value="vote">
             </div>
         </form>
     </div>

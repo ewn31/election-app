@@ -87,6 +87,8 @@ studentRouter.get('/:matricule/vote/:id', (req, res)=>{
                             positions[e.position].push({id:e.id, name:e.name})
                         }
                     })
+                }else{
+                    var positions = {}
                 }
                 console.log(positions)
             } catch (error) {
