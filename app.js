@@ -5,6 +5,7 @@ const adminRouter = require('./routes/adminRouter.js');
 const verifyUser = require('./lib/verifyUser.js');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
+const { RAW } = require('sequelize/lib/query-types');
 
 const cfg = {
     port:3000,
@@ -15,9 +16,11 @@ const port = process.env.PORT
 
 const app =  express();
 
-
 app.set('view engine', 'ejs')
 app.set('views', './views')
+
+
+
 
 app.use(express.urlencoded({ extended:true }));
 

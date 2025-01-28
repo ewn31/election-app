@@ -27,12 +27,19 @@ adminRouter.post('/', (req, res)=>{
             const token =  generateToken(user);
             res.cookie("token", token, {httpOnly: true});
             res.setHeader('Authorization','Bearer '+ token);
-            res.render('elections', {title:'Admin', feedback:'Welcome'})
+            res.redirect('/admin/home');
             
         })()
     } catch (error) {
         console.log(error)
         res.status(500).send('Server Error')
+    }
+})
+adminRouter.get('/home',(req, res)=>{
+    try {
+        res.render('elections', {title:'Admin', feedback:'Welcome'})
+    } catch (error) {
+        console.log(error);
     }
 })
 

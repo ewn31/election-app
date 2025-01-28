@@ -55,7 +55,6 @@ Candidate.init({
             model: 'Students',
             key: 'matricule'
         },
-        unique:true,
     },
     name:{
         type: Sequelize.STRING,
@@ -68,7 +67,6 @@ Candidate.init({
             model: 'Elections',
             key: 'id',
         },
-        unique:true
     },
     election_name:{
         type: Sequelize.STRING,
@@ -128,7 +126,7 @@ Vote.init({
 )
 
 async function syncModel() {
-    await sequelize.sync({alter:true});
+    await sequelize.sync();
 
 }
 

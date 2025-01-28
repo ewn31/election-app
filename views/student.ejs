@@ -42,20 +42,26 @@
         <div class="w3-modal-content w3-sand w3-card-4 w3-round" style="max-width: 400px;">
             <div class="w3-container w3-padding">
                 <span onclick="document.getElementById('profile-modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-                    <ul class="w3-ul" id="profile">
+                    <form class="w3-ul" id="profile">
                         
-                    </ul>
-                    <button class="w3-btn w3-margin w3-padding"><a href="/update-student">Modify</a></button>
+                    </form>
             </div>
         </div>
+        <div id="feedback" class="w3-panel w3-center w3-animate-bottom w3-black" style="position: absolute; bottom:15%; width:100%;"><%=feedback %></div>
     </div>
    
     <script>
         const fd = document.getElementById("feedback");
-        if(fd){
-        setTimeout(()=>{
-            fd.style.display="none"
-        }, 10000);}
+            setTimeout(()=>{
+                fd.style.display="none"
+            }, 10000);
+            function showFeedback(msg){
+                feedback.innerText = msg;
+                feedback.style.display = 'block';
+                setTimeout(()=>{
+                fd.style.display="none"
+            }, 10000);
+            }
     </script>
     <script src="/js/spinnerTemplate.js"></script>
     <script src="/js/showComponent.js"></script>
@@ -69,15 +75,57 @@
                 for (let detail in data) {
                     if(detail === 'createdAt' || detail === 'updatedAt' || detail === 'hashed_password'){
                         continue;
+                    }else if(detail === 'matricule'){
+                        html += `<div id='student-${detail}' style="display:none;">${data[detail]}</div>`
                     }
-                    html += `<li>${detail}: ${data[detail]}</li>`;
+                    html += `<label for=${detail} id='${detail}'>${detail}</label><input type="text" class="w3-input w3-border w3-round" name="${detail}" value =${data[detail]}>`;
                 }
+                html += `
+                        <label for="password">password</label>
+                        <input type="password" class="w3-input w3-border w3-round" name="password" required>
+                        <div class='w3-margin'>
+                        <input type="submit" class="w3-input w3-round w3-deep-orange" value="modify" id="modifyProfile"></div>`
                 return html
             })
         })()
         } catch (error) {
             console.log(error)
         }
+
+    </script>
+    <script>
+        const modifyProfileBtn = document.querySelector('form');
+
+        modifyProfileBtn.addEventListener('submit', async (e)=>{
+            e.preventDefault();
+            const form = event.target;
+            const data = new FormData(form);
+            const formDataObj = Object.fromEntries(data.entries());
+            const matricule =  document.getElementById('student-matricule').innerText;
+
+            console.log(typeof matricule, formDataObj)
+
+            try{
+                const response =  fetch(`/student/${matricule}`,{
+                    method: 'PUT',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formDataObj)
+                })
+
+
+
+                const result = await response.text();
+
+                        showFeedback(result);
+                   
+            }catch(error){
+                console.log(error)
+                showFeedback('Failed to update profile')
+            }
+        })
+
 
     </script>
     <script>

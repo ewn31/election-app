@@ -16,7 +16,7 @@ async function addStudent(data){
 
 async function getStudent(id){
     try {
-        const student = await Student.findAll({
+        const student = await Student.findOne({
             where:{
                 matricule:id
             }

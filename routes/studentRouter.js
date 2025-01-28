@@ -1,11 +1,17 @@
 const express = require('express');
 const {getStudentElections, getCandidates, updateCandidateVote, registerVote} = require('../Database/electionDB')
 const {getStudent, updateStudent, addStudent} = require('../Database/studentDb');
-
+const hashPassword = require('../lib/hash');
+const {generateToken} = require('../lib/token')
 const studentRouter = express.Router();
 
-studentRouter.get('/', (req, res)=>{
-    res.send('student /');
+studentRouter.get('/:matricule/home', (req, res)=>{
+    try {
+        const matricule = req.params.matricule
+        res.render('student',{title:'student', matricule, election:{}, data:{}, feedback:'Welcome' })
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 studentRouter.get('/test', (req, res)=>{
@@ -15,11 +21,22 @@ studentRouter.get('/test', (req, res)=>{
 studentRouter.get('/:id', (req, res)=>{
     const matricule = req.params.id;
     (async () => {
-        const [student] = await getStudent(matricule)
+        const student = await getStudent(matricule)
         res.json(student);
     })()
 })
-
+studentRouter.post('/register', (req, res)=>{
+    const data = req.body;
+    try {
+        (async () => {
+            await addStudent(data);  
+        })()
+        res.render('login', {title:"Login", message:"", feedback:"Registration Complete"})
+    } catch (error) {
+        console.log(error)
+        res.render('login', {title:"Login", message:"", feedback:"Registration failed"})
+    }
+})
 studentRouter.post('/', (req, res)=>{
     const {matricule, password} = req.body
     const hashed_password = hashPassword(password)
@@ -27,11 +44,11 @@ studentRouter.post('/', (req, res)=>{
         (async ()=>{
             const data = await getStudent(matricule);
             if(!data){
-                return res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
+                return res.render("studentLogin",{title:"login", message:"incorrect username or password", feedback:""})
             }
-            console.log(data, hashed_password);
-            if(data.hashed_password !== hashed_password){
-                return res.render("login",{title:"login", message:"incorrect username or password", feedback:""})
+            console.log((data.hashed_password).toString(), hashed_password, 'in student Route');
+            if((data.hashed_password).toString() !== hashed_password){
+                return res.render("studentLogin",{title:"login", message:"incorrect username or password", feedback:""})
             }
             const user = {
                 user: req.body.username,
@@ -41,7 +58,7 @@ studentRouter.post('/', (req, res)=>{
             const token =  generateToken(user);
             res.cookie("token", token, {httpOnly: true});
             res.setHeader('Authorization','Bearer '+ token);
-            res.render('student',{title:'student', matricule:mat, election:{}, data:{}, feedback:'' })
+            res.redirect('/student/home')
             
         })()
     } catch (error) {
