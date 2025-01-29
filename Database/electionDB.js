@@ -92,6 +92,11 @@ async function updateElection(id, data){
 
 async function deleteElection(id) {
     try {
+        await Candidate.destroy({
+            where:{
+                election_id:id
+            }
+        })
         await Election.destroy({
             where:{
                 id:id
@@ -118,6 +123,7 @@ async function getCandidates(id) {
                 election_id:id
             }
         })
+        console.log(candidates)
         return candidates;
     } catch (error) {
         console.log(error)

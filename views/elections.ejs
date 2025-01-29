@@ -35,7 +35,7 @@
                       <script>
                         function deleteDetails(id, name){
                             document.getElementById('delete-election-warning').innerText = `Are you sure you want to delete ${name}`
-                            document.querySelector('#deleteElectionBtn').addEventListener(click, (e)=>{
+                            document.querySelector('#deleteElectionBtn').addEventListener('click', (e)=>{
                                 deleteElection(`${id}`)
                             })
                         }
@@ -81,6 +81,33 @@
                     </div>
                 </div>
             </div>
+            <script>
+                const modifyBtn =  document.getElementById('modifyElecBtn')
+                console.log(modifyBtn)
+                modifyBtn.addEventListener('click',  (e)=>{
+                    const url = e.target().data-modifyLink
+                    try{
+                        const response =  fetch(url)
+                        if(!response.ok){
+                            console.log(response.status)
+                        }
+                        (async ()=>{
+                            const result = await response.json();
+                            const [election] = JSON.parse(result);
+                            for(let detail in election){
+                                if(detail === 'createdAt' || detail === 'updatedAt'){
+                                    continue;
+                                }
+                                document.getElementById(`modify-${detail}`).value = election[detail]
+                            }
+                            document.querySelector('#modifyModal').style.display = 'block';
+                        })()
+                        
+                    }catch(error){
+                        console.log(error)
+                    }
+                })
+            </script>
             <script>
                 function openModifyModal(election) {
                     document.getElementById('modify-name').value = election.name;
@@ -240,7 +267,7 @@
                 }
                 html += `<td><button class="w3-btn"><a href="/admin/elections/${election.id}/status" >See Status</a></button></td>
                         <td><button class="w3-btn"><a href="/admin/election/${election.id}/addCandidate">Candidates</a></button></td>
-                         <td><button class="w3-btn"><a href="/admin/election/${election.id}">Modify</a></button></td>
+                         <td><button class="w3-btn" data-modifyLink="/admin/election/${election.id}" id='modifyElecBtn'><a href="/admin/election/${election.id}/modify"></a></button></td>
                             <td id="election-id" style="display:none;"><election.id</td>
                             <td><button class='w3-red w3-btn' onclick="document.getElementById('deleteModal').style.display='block'; deleteDetails(${election.id}, '${election.name}')">Delete</button></td>`
                 html += '</tr>'

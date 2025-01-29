@@ -110,6 +110,15 @@ adminRouter.get('/election/:id', (req, res)=>{
     }
 })
 
+adminRouter.get('/election/:id/modify', (req, res)=>{
+    try {
+        const [election] = getElection(req.params.id)
+        res.render('modifyElection', {title:'modify election', election})
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 adminRouter.put('/election/:id', (req, res)=>{
     const id = req.params.id
     const data = req.body
@@ -155,9 +164,10 @@ adminRouter.get("/election/:id/candidates", (req, res)=>{
         (async () => {
            const candidates = await getCandidates(req.params.id);
            if(candidates.length !== 0){
+            console.log(candidates)
             var positions = {}
             candidates.forEach((e)=>{
-                if(Object.keys(candidates).includes(e.position)){
+                if(Object.keys(positions).includes(e.position)){
                     positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
                 }else{
                     positions[e.position] = []
@@ -216,8 +226,8 @@ adminRouter.get('/elections/:electionId/status', (req, res)=>{
            if(candidates.length !== 0){
             var positions = {}
             candidates.forEach((e)=>{
-                if(Object.keys(candidates).includes(e.position)){
-                    positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
+                if(Object.keys(positions).includes(e.position)){
+                    positions[e.position].push({name:e.name, votes:e.vote_count })
                 }else{
                     positions[e.position] = []
                     positions[e.position].push({name:e.name, votes:e.vote_count})
@@ -226,6 +236,7 @@ adminRouter.get('/elections/:electionId/status', (req, res)=>{
         }else{
             var positions = {}
         }
+        console.log(positions)
         res.render('electionStatus', {title:'election status', positions})
         })()
     } catch (error) {

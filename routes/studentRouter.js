@@ -14,8 +14,8 @@ studentRouter.get('/:matricule/home', (req, res)=>{
     }
 })
 
-studentRouter.get('/test', (req, res)=>{
-    res.send('student route');
+studentRouter.get('/', (req, res)=>{
+    res.render('loginStudent', {title:'Login',message:''})
 })
 
 studentRouter.get('/:id', (req, res)=>{
@@ -31,10 +31,10 @@ studentRouter.post('/register', (req, res)=>{
         (async () => {
             await addStudent(data);  
         })()
-        res.render('login', {title:"Login", message:"", feedback:"Registration Complete"})
+        res.render('loginStudent', {title:"Login", message:"", feedback:"Registration Complete"})
     } catch (error) {
         console.log(error)
-        res.render('login', {title:"Login", message:"", feedback:"Registration failed"})
+        res.render('loginStudent', {title:"Login", message:"", feedback:"Registration failed"})
     }
 })
 studentRouter.post('/', (req, res)=>{
@@ -48,17 +48,17 @@ studentRouter.post('/', (req, res)=>{
             }
             console.log((data.hashed_password).toString(), hashed_password, 'in student Route');
             if((data.hashed_password).toString() !== hashed_password){
-                return res.render("studentLogin",{title:"login", message:"incorrect username or password", feedback:""})
+                return res.render("loginStudent",{title:"login", message:"incorrect username or password", feedback:""})
             }
             const user = {
-                user: req.body.username,
+                user: req.body.matricule,
                 isAdmin: false,
                 password: req.body.password
             }
             const token =  generateToken(user);
             res.cookie("token", token, {httpOnly: true});
             res.setHeader('Authorization','Bearer '+ token);
-            res.redirect('/student/home')
+            res.redirect(`/student/${matricule}/home`)
             
         })()
     } catch (error) {
@@ -127,7 +127,7 @@ studentRouter.get('/:matricule/vote/:id', (req, res)=>{
                 if(candidates.length !== 0){
                     var positions = {}
                     candidates.forEach((e)=>{
-                        if(Object.keys(candidates).includes(e.position)){
+                        if(Object.keys(positions).includes(e.position)){
                             positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
                         }else{
                             positions[e.position] = []
@@ -155,6 +155,7 @@ studentRouter.post('/:matricule/vote/:id', (req, res)=>{
     try {
         (async () => {
             await verifyIfEligibleElection(res, mat, election_id)
+            console.log('in vote route,', req.body)
             await updateCandidateVote(req.params.id, req.body)
             await registerVote(mat, election_id);
             res.send('Vote registered')

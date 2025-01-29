@@ -114,11 +114,13 @@
                     body: JSON.stringify(formDataObj)
                 })
 
+                if(response.status === 201){
+                    showFeedback('Profiled Modidfied');
+                }
 
+                //const result = await response.text()
 
-                const result = await response.text();
-
-                        showFeedback(result);
+                        //showFeedback(result);
                    
             }catch(error){
                 console.log(error)
