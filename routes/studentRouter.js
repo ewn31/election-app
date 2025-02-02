@@ -1,6 +1,8 @@
 const express = require('express');
-const {getStudentElections, getCandidates, updateCandidateVote, registerVote} = require('../Database/electionDB')
-const {getStudent, updateStudent, addStudent} = require('../Database/studentDb');
+//const {getStudentElections, getCandidates, updateCandidateVote, registerVote} = require('../Database/electionDB')
+//const {getStudent, updateStudent, addStudent} = require('../Database/studentDb');
+const {getStudentElections, getCandidates, updateCandidateVote, registerVote} = require('../Mongodb/electionDb')
+const {getStudent, updateStudent, addStudent} = require('../Mongodb/studentDb');
 const hashPassword = require('../lib/hash');
 const {generateToken} = require('../lib/token')
 const studentRouter = express.Router();
@@ -15,7 +17,7 @@ studentRouter.get('/:matricule/home', (req, res)=>{
 })
 
 studentRouter.get('/', (req, res)=>{
-    res.render('loginStudent', {title:'Login',message:''})
+    res.render('loginStudent', {title:'Login',message:'', feedback:""})
 })
 
 studentRouter.get('/:id', (req, res)=>{
@@ -44,7 +46,7 @@ studentRouter.post('/', (req, res)=>{
         (async ()=>{
             const data = await getStudent(matricule);
             if(!data){
-                return res.render("studentLogin",{title:"login", message:"incorrect username or password", feedback:""})
+                return res.render("loginStudent",{title:"login", message:"incorrect username or password", feedback:""})
             }
             console.log((data.hashed_password).toString(), hashed_password, 'in student Route');
             if((data.hashed_password).toString() !== hashed_password){
@@ -107,12 +109,13 @@ studentRouter.put('/:id', (req, res)=>{
 
 async  function verifyIfEligibleElection(res, mat, id){
     const elections = await getStudentElections(mat)
-    const election_ids = elections.map(e => e.id)
+    const election_ids = elections.map(e => (e._id).toString())
+    
         try {
-            if(!(election_ids.includes(parseInt(id)))) res.status(401).send('forbidden')
+            if(!(election_ids.includes(id)))return res.status(401).send('forbidden')
         } catch (error) {
             console.log(error)
-            res.status(401).send('forbidden')
+            return res.status(401).send('forbidden')
         }
 }
 

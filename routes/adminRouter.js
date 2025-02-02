@@ -1,7 +1,9 @@
 const express = require('express');
 const {generateToken} =  require('../lib/token')
-const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate, getElectionResults } = require('../Database/electionDB');
-const {addAdmin, updateAdmin, getAdmin} = require('../Database/adminDb');
+//const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate, getElectionResults } = require('../Database/electionDB');
+const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate, getElectionResults } = require('../Mongodb/electionDb');
+//const {addAdmin, updateAdmin, getAdmin} = require('../Database/adminDb');
+const {addAdmin, updateAdmin, getAdmin} = require('../Mongodb/adminDb');
 const hashPassword = require('../lib/hash');
 
 const adminRouter = express.Router();
@@ -150,9 +152,10 @@ adminRouter.get('/election/:id/addCandidate', (req, res)=>{
     try {
         (async () => {
            const election = await getElection(req.params.id);
-           const {id, name} = election[0]
+           if(election)var {_id, name} = election
+           else{var _id = "", name = ""}
            console.log(election)
-           res.render('addCandidates',{title:'Candidates', election_name:name, election_id:id, feedback:"Add Candidates"}) 
+           res.render('addCandidates',{title:'Candidates', election_name:name, election_id:_id, feedback:"Add Candidates"}) 
         })()
     } catch (error) {
         console.log(error)

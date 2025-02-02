@@ -11,8 +11,8 @@
                 <label for="position"><h3><%=position %><h3></label></div>
                 <% for(let candidate of candidates[position]) { %>
                 <div class="w3-margin">
-                    <input type="radio" name=<%=position %> id="" value=<%=`${candidate.name}` %> class="w3-radio">
-                <label for=<%=candidate %> > <%=candidate.name %> </label>
+                    <input type="radio" name="<%=position%>" value=<%=`${candidate.name}` %> class="w3-radio">
+                <label for=<%=candidate.name %> > <%=candidate.name %> </label>
                 </div>
                 <% } %>
             <% } %>

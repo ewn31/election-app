@@ -21,6 +21,8 @@
     "express-session": "^1.18.1",
     "formidable": "^3.5.2",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.5",
     "mysql2": "^3.11.5",
     "sequelize": "^6.37.5"
   }

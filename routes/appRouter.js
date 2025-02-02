@@ -9,7 +9,7 @@ const appRouter = express.Router();
 // login route
 appRouter.get('/', (req, res)=>{
     //res.render("studentLogin", {title:"login", message:"" , feedback:""});
-    res.send('student login')
+    res.redirect('/student');
 })
 appRouter.post('/', (req, res)=>{
     (async ()=>{

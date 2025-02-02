@@ -73,7 +73,7 @@
                 let html = '<li><h3>Profile Details<h3></li>'
                 console.log(data);
                 for (let detail in data) {
-                    if(detail === 'createdAt' || detail === 'updatedAt' || detail === 'hashed_password'){
+                    if(detail === 'createdAt' || detail === 'updatedAt' || detail === 'hashed_password' || detail === "__v" || detail === "_id"){
                         continue;
                     }else if(detail === 'matricule'){
                         html += `<div id='student-${detail}' style="display:none;">${data[detail]}</div>`
@@ -143,8 +143,8 @@
                 for(let election of elections){
                     html += '<tr>'
                     for (let detail in election) {
-                    if(detail === 'id'){
-                        var votingUrl = `/student/<%=matricule%>/vote/${election.id}` 
+                    if(detail === '_id'){
+                        var votingUrl = `/student/<%=matricule%>/vote/${election._id}` 
         
                     }else if(detail === 'name'){
                         html += `<td><a href=${votingUrl}>${election[detail]}</a></td>`
@@ -152,7 +152,7 @@
                         html += `<td>${new Date(election[detail]).toDateString()}</td>`
                     }
 
-                    else if(detail === 'createdAt' || detail === 'updatedAt'){
+                    else if(detail === 'createdAt' || detail === 'updatedAt' || detail === '__v'){
                         continue;
                     }
                     else{
