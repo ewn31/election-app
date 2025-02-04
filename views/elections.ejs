@@ -258,13 +258,13 @@
                 html += '<tr>'
                 for(let detail in election){
                     console.log(detail)
-                    if(detail === 'createdAt' || detail === 'updatedAt'){
+                    if(detail === 'createdAt' || detail === 'updatedAt' || detail === '__v'){
                         continue;
                     }
                     else if(detail === '_id'){
                         html += `<td style="display:none;  ">${election[detail]}</td>`
                     }
-                    else if(detail === 'start_date' || detail === 'end_date' || detail === '__v'){
+                    else if(detail === 'start_date' || detail === 'end_date'){
                         html += `<td>${new Date(election[detail]).toDateString()}</td>`
                     }else{
                         html +=`<td>${election[detail]}</td>`

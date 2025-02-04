@@ -161,7 +161,8 @@ studentRouter.post('/:matricule/vote/:id', (req, res)=>{
             console.log('in vote route,', req.body)
             await updateCandidateVote(req.params.id, req.body)
             await registerVote(mat, election_id);
-            res.send('Vote registered')
+            //res.send('Vote registered')
+            res.render('student',{title:'student', matricule:mat, election:{}, data:{}, feedback:'Vote Registered' })
         })()
     } catch (error) {
         console.log(error)
