@@ -1,7 +1,7 @@
 const express = require('express');
 //const {getStudentElections, getCandidates, updateCandidateVote, registerVote} = require('../Database/electionDB')
 //const {getStudent, updateStudent, addStudent} = require('../Database/studentDb');
-const {getStudentElections, getCandidates, updateCandidateVote, registerVote} = require('../Mongodb/electionDb')
+const {getStudentElections, getCandidates, updateCandidateVote, registerVote, getVotingHistory} = require('../Mongodb/electionDb')
 const {getStudent, updateStudent, addStudent} = require('../Mongodb/studentDb');
 const hashPassword = require('../lib/hash');
 const {generateToken} = require('../lib/token')
@@ -167,6 +167,20 @@ studentRouter.post('/:matricule/vote/:id', (req, res)=>{
     } catch (error) {
         console.log(error)
         res.send('Voting failed')
+    }
+})
+
+studentRouter.get('/:matricule/history', (req, res)=>{
+    const matricule =  req.params.matricule;
+    try {
+        (async () => {
+            const history = await getVotingHistory(matricule)
+            console.log('In student routes getting history: ', history);
+            res.json(history); 
+         })()
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Server Error');
     }
 })
 

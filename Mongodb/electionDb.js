@@ -174,4 +174,34 @@ async function getElectionResults(id){
     }
 }
 
-module.exports = {createElection, getStudentElections, getElection,getElections, getElectionResults, updateCandidateVote, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate, registerVote}
+async function getVotingHistory(matricule) {
+    try {
+        const voteHistory = await Votes.find({matricule})
+        const election_ids = voteHistory.map(e=>{
+            const election_id = e.election_id
+            const vote_time = e.vote_time
+            return {election_id, vote_time}
+        })
+        console.log(election_ids)
+        const history = []
+        for(let e of election_ids){
+            try {
+                let election = await Elections.findOne({_id:e.election_id})
+                console.log(election.name, e.vote_time, 'logging history', history);
+                if(election){
+                    history.push({name:election.name, vote_time:e.vote_time })
+                    console.log('logging history: ', history)
+                    //return history
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        console.log('logging history: ',history)
+        return history
+    } catch (error) {
+        console.log(error);
+        return {error: 'An Error Occured'}
+    }
+}
+module.exports = {createElection, getStudentElections, getElection,getElections, getElectionResults, updateCandidateVote, updateElection, deleteElection, addCandidate, getCandidates, updateCandidate, deleteCandidate, registerVote, getVotingHistory}

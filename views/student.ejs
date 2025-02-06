@@ -7,6 +7,7 @@
         </div>
         <nav class="w3-bar">
             <button class="w3-bar-item w3-button tab-btn w3-sand" onclick="showSection('current-elections', 'current-elections-btn');" id="current-elections-btn">Current Elections</button>
+            <button class="w3-bar-item w3-button tab-btn w3-sand" onclick="showSection('history', 'history-btn');" id="history-btn">History</button>
         </nav>
     </header> 
 
@@ -25,7 +26,14 @@
                             
                         </tbody>
                 </table>
-
+            <table id="history" class="w3-table w3-bordered full-height content-section active overflow" style="min-height: 300px; width:100%;">
+                <thead>
+                    <th>Name</th>
+                    <th>Date</th>
+                </thead>
+                <tbody id="history-data">
+                    
+                </tbody>
             </table>
     </div>
                 
