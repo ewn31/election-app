@@ -1,0 +1,70 @@
+.admin-page {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    background-color: #fef7ff;
+    padding: 44px 0px;
+    margin: 0px;
+}
+
+.side-section {
+    flex: 0 0 25%;
+    background-color: #ffffff;
+    padding: 0px 24px;
+    border-radius: 36px 0px 0px 36px;
+}
+
+.main-section {
+    flex: 0 0 calc(75% - 104px);
+    background-color: #ffffff;
+    border-radius: 0px 36px 36px 0px;
+    margin-left: 4px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}
+
+.side-bar {
+    flex: 0 0 52px;
+    padding-top: 24px;
+}
+.candidate-card{
+    flex: 0 0 90%;
+}
+.round{
+    border-radius: 36px;
+}
+.selected{
+    background-color: #fef7ff;
+}
+
+/* Custom scrollbar styles */
+.main-section::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.main-section::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.main-section::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.main-section::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    .admin-page {
+        flex-direction: column;
+    }
+
+    .side-section, .main-section, .side-bar {
+        flex: 0 0 auto;
+        width: 100%;
+        height: auto;
+    }
+}

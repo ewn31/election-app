@@ -119,7 +119,7 @@ async  function verifyIfEligibleElection(res, mat, id){
         }
 }
 
-studentRouter.get('/:matricule/vote/:id', (req, res)=>{
+/*studentRouter.get('/:matricule/vote/:id', (req, res)=>{
     const mat = req.params.matricule
     const election_id = req.params.id
     try {
@@ -134,7 +134,7 @@ studentRouter.get('/:matricule/vote/:id', (req, res)=>{
                             positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
                         }else{
                             positions[e.position] = []
-                            positions[e.position].push({id:e.id, name:e.name})
+                            positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
                         }
                     })
                 }else{
@@ -150,7 +150,41 @@ studentRouter.get('/:matricule/vote/:id', (req, res)=>{
         console.log(error)
         res.send('Error')
     }
+})*/
+
+studentRouter.get('/:matricule/vote/:id', (req, res)=>{
+    const mat = req.params.matricule
+    const election_id = req.params.id
+    try {
+        (async () => {
+            await verifyIfEligibleElection(res, mat, election_id)
+            const candidates = await getCandidates(election_id)
+            try {
+                if(candidates.length !== 0){
+                    var positions = {}
+                    candidates.forEach((e)=>{
+                        if(Object.keys(positions).includes(e.position)){
+                            positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
+                        }else{
+                            positions[e.position] = []
+                            positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
+                        }
+                    })
+                }else{
+                    var positions = {}
+                }
+                console.log(positions)
+            } catch (error) {
+              console.log(error)   
+            }
+        })()
+        res.json(positions)
+    } catch (error) {
+        console.log(error)
+        res.send('Error')
+    }
 })
+
 
 studentRouter.post('/:matricule/vote/:id', (req, res)=>{
     const mat = req.params.matricule;

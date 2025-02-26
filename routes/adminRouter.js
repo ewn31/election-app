@@ -1,5 +1,6 @@
 const express = require('express');
 const {generateToken} =  require('../lib/token')
+const path = require('path');
 //const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate, getElectionResults } = require('../Database/electionDB');
 const { getElection, createElection, getElections, updateElection, deleteElection, getCandidates, addCandidate, updateCandidate, deleteCandidate, getElectionResults } = require('../Mongodb/electionDb');
 //const {addAdmin, updateAdmin, getAdmin} = require('../Database/adminDb');
@@ -39,7 +40,8 @@ adminRouter.post('/', (req, res)=>{
 })
 adminRouter.get('/home',(req, res)=>{
     try {
-        res.render('elections', {title:'Admin', feedback:'Welcome'})
+        /*res.render('elections', {title:'Admin', feedback:'Welcome'})*/
+        res.sendFile(path.join(__dirname, '../dist/admin.html'))
     } catch (error) {
         console.log(error);
     }
@@ -171,10 +173,10 @@ adminRouter.get("/election/:id/candidates", (req, res)=>{
             var positions = {}
             candidates.forEach((e)=>{
                 if(Object.keys(positions).includes(e.position)){
-                    positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule})
+                    positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule, votes:e.vote_count })
                 }else{
                     positions[e.position] = []
-                    positions[e.position].push({name:e.name, votes:e.vote_count})
+                    positions[e.position].push({id:e.id, name:e.name, matricule:e.matricule, votes:e.vote_count})
                 }
             })
         }else{

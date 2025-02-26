@@ -6,6 +6,7 @@ const verifyUser = require('./lib/verifyUser.js');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const { RAW } = require('sequelize/lib/query-types');
+const cors = require('cors');  
 
 const cfg = {
     port:3000,
@@ -23,7 +24,7 @@ app.set('view cache', false);
 
 
 
-
+app.use(cors());
 
 app.use(express.urlencoded({ extended:true }));
 
@@ -35,7 +36,7 @@ app.use(express.json())
 
 app.use(express.static('static'));
 
-app.use(verifyUser);
+//app.use(verifyUser);
 
 app.use('/student', studentRouter);
 

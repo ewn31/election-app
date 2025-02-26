@@ -1,35 +1,61 @@
-import { Button } from "@mui/material"
-import { useState } from "react"
-import AddElection from "./Components/AddElection";
+import { useState, useEffect } from "react"
 import "./AdminPage.css"; // Import the CSS file
-import TitleBar from "./Components/TitleBar";
+import ElectionBox from "./Components/ElectionBox";
+import SideBar from "./Components/SideBar";
+import DetailsPanel from "./Components/DetailsPanel";
+
 
 export default function AdminPage() {
-    const [open, setOpen] = useState(false);
+   
+    const [elections, setElections] = useState(null);
 
-    const [elections, setElections] = useState([]);
+    const [fetchState, setFetchState] = useState('not-yet')
+    
+    const[selectedElectionId, setSelectedElectionId] = useState(0);
 
+    const [user , setUser] = useState('admin');
 
-    const handleClick = () => { setOpen(true) }
+    useEffect(() => {
 
-    const handleClose = () => { setOpen(false) }
+    fetch('http://localhost:3000/admin/elections').then(response =>{
+        setFetchState('fetching')
+        if(response.ok){
+            return response.json()
+        }
+    }).then(json => {setElections(json)
+        setFetchState('fetched')
+        console.log('Elections fetched: ', json)
+        console.log('Elections: ', elections)
+        console.log('Fetch State: ', fetchState);
+        console.log('Selected Election Id: ', selectedElectionId);
+        console.log('Typeof start_date: ', typeof(json[0].start_date))
+        console.log('start_date: ', new Date(json[0].start_date).toDateString());
+        
+        
+          
+    }).catch(error => {
+        console.log('Error while fetching elections: ', error)
+        setElections(null)
+        setFetchState('failed')
+    })
+    }
+    ,[])
 
     return (
         <div className="admin-page">
+            <div className="side-bar">
+                <SideBar />
+            </div>
             <div className="side-section">
-                <h2>Side Section</h2>
-                <p>Content for the side section.</p>
+                <ElectionBox elections={elections} 
+                setSelectedId={setSelectedElectionId}
+                selectedId={selectedElectionId}
+                fetchState={fetchState}
+                user={user}
+                />
             </div>
             <div className="main-section">
-                <TitleBar election={{ id: 1, name: "Election 1" }} user={{ username: "admin" }} />
-                <h1>Admin Page</h1>
-                <p>Here is the admin page.</p>
-                <Button variant="contained" onClick={handleClick}>Add Election</Button>
-                <AddElection open={open} handleClose={handleClose} />
-            </div>
-            <div className="side-bar">
-                <h2>Side Bar</h2>
-                <p>Content for the side bar.</p>
+                <DetailsPanel elections={elections} selectedElectionId={selectedElectionId} />
             </div>
         </div>
     );

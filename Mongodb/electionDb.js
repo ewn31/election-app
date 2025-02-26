@@ -66,7 +66,10 @@ async function getElection(id){
 
 async function updateElection(id, data){
     try {
-        await Elections.update({_id:id},data)
+        await Elections.findByIdAndUpdate(
+            id,
+            data
+        )
     } catch (error) {
         console.log(error)
     }
