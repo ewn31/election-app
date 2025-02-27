@@ -5,7 +5,7 @@ import PersonIcon from '@mui/icons-material/Person';
 
 
 
-export default function CandidateCard({electionId, positions}) {
+export default function CandidateCard({electionId, positions, setElectionId}) {
     console.log('In candidate card: ', electionId);
 
     if(!positions){

@@ -36,7 +36,7 @@ app.use(express.json())
 
 app.use(express.static('static'));
 
-//app.use(verifyUser);
+app.use(verifyUser);
 
 app.use('/student', studentRouter);
 

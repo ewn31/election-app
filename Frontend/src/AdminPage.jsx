@@ -3,6 +3,7 @@ import "./AdminPage.css"; // Import the CSS file
 import ElectionBox from "./Components/ElectionBox";
 import SideBar from "./Components/SideBar";
 import DetailsPanel from "./Components/DetailsPanel";
+import FeedBack from "./Components/FeedBack";
 
 
 export default function AdminPage() {
@@ -14,6 +15,9 @@ export default function AdminPage() {
     const[selectedElectionId, setSelectedElectionId] = useState(0);
 
     const [user , setUser] = useState('admin');
+
+    const [feedback, setFeedback] = useState({message: 'succefully loading', severity: 'success'})   ;
+
 
     useEffect(() => {
 
@@ -52,10 +56,14 @@ export default function AdminPage() {
                 selectedId={selectedElectionId}
                 fetchState={fetchState}
                 user={user}
+                setFeedback={setFeedback}
                 />
             </div>
             <div className="main-section">
-                <DetailsPanel elections={elections} selectedElectionId={selectedElectionId} />
+                <DetailsPanel elections={elections} selectedElectionId={selectedElectionId}
+                  setFeedback={setFeedback}
+                />
+                <FeedBack feedback={feedback} />
             </div>
         </div>
     );

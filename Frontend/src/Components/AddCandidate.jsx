@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
 
-export default function AddElection({isOpen, setIsOpen, selectedId }){
+export default function AddElection({isOpen, setIsOpen, selectedId, setFeedBack }){
     const [formData, setFormData] = useState({
         name: '',
         position: '',
@@ -34,10 +34,12 @@ export default function AddElection({isOpen, setIsOpen, selectedId }){
             body: JSON.stringify(formData),
         }).then(response => {
             if(response.ok){
+                setFeedBack({message:'Candidate added successfully', severity:'success'});
                 console.log('Candidate added successfully');
                 handleClose();
             }
         }).catch(error => {
+            setFeedBack({message:'Error while adding candidate', severity:'error'});
             console.log('Error while adding candidate: ', error);
         })
         handleClose();

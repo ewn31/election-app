@@ -6,7 +6,7 @@ import DetailsCard from './DetailsCard'
 import CandidateCard from './CandidateCard'
 import { useState, useEffect } from 'react'
 
-export default function DetailsPanel({elections, selectedElectionId}){
+export default function DetailsPanel({elections, selectedElectionId, setFeedback}){
 
     console.log('In DetailsPanel: ', elections, selectedElectionId);
 
@@ -63,11 +63,11 @@ export default function DetailsPanel({elections, selectedElectionId}){
             <TitleBar election={elections.find(election=>election._id === selectedElectionId)} 
                     user={{ username: "admin" }} />
                 <Box 
-                    sx={{borderRadius:'36px', display: 'flex', flexWrap: 'wrap',minHeight:'80vh', width:'100%' }}
+                    sx={{borderRadius:'36px', display: 'flex', flexWrap: 'wrap',height:'100vh - 160px', width:'100%' }}
                 >
                     <Box 
                 component='div'
-                sx={{display: 'flex', flexDirection:'row',  gap: '24px', flexWrap: 'wrap', justifyContent:'space-around', paddingTop:'24px', minHeight:'80vh', width:'70%',
+                sx={{display: 'flex', flexDirection:'row',  gap: '8px', flexWrap: 'wrap', justifyContent:'space-around', paddingTop:'24px', minHeight:'80vh', width:'70%',
                  }}>
                     <Box sx={{display:'flex', width:'100%', pr:6, justifyContent:'flex-end', maxHeight:'48px',}}>
                         <Button
@@ -81,7 +81,9 @@ export default function DetailsPanel({elections, selectedElectionId}){
                             Add Candidate
 
                         </Button>
-                        <AddCandidate isOpen={open} setIsOpen={setOpen} selectedId={selectedElectionId} />
+                        <AddCandidate isOpen={open} setIsOpen={setOpen} selectedId={selectedElectionId} 
+                            setFeedback={setFeedback}
+                        />
                     </Box>
                     {Object.keys(positions).length === 0 ? <Typography variant='h5' component={'h5'}>No Candidates</Typography> :
                     <CandidateCard electionId={selectedElectionId} positions={positions}  />
@@ -89,9 +91,12 @@ export default function DetailsPanel({elections, selectedElectionId}){
                 </Box>
                 <Box 
                 component='div'
-                sx={{display: 'flex', flexDirection:'row', gap: '24px', flexWrap: 'wrap', justifyContent:'space-around', paddingTop:'24px', minHeight:'80vh', width:'30%' }}>
+                sx={{display: 'flex', flexDirection:'row', gap: '8px', flexWrap: 'wrap', justifyContent:'space-around', paddingTop:'24px', width:'30%' }}>
                   <DetailsCard election={elections.find(election=>election._id === selectedElectionId)}
-                  positions={positions} />
+                  setFeedback={setFeedback}
+                  positions={positions} 
+                  className='candidate-card'
+                  />
                 </Box>
                 </Box>
         </>

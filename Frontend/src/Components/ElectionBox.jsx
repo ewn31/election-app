@@ -7,7 +7,7 @@ import ElectionList from "./ElectionList";
 import { basicFilter } from '../lib/filter'
 
 
-export default function ElectionBox({ user, elections, selectedId, setSelectedId, fetchState }){
+export default function ElectionBox({ user, elections, selectedId, setSelectedId, fetchState, setFeedback }){
 
     const [electionsToDisplay, setElectionsToDisplay] = useState(elections);
 
@@ -80,6 +80,7 @@ export default function ElectionBox({ user, elections, selectedId, setSelectedId
                     <AddElection
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
+                    setFeedback={setFeedback}
                      />
                 </IconButton>}
             </Box>

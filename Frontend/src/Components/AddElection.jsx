@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
+import { set } from '../../../Mongodb/models/adminModel';
 
-export default function AddElection({isOpen, setIsOpen }){
+export default function AddElection({isOpen, setIsOpen, setFeedBack }){
     const [formData, setFormData] = useState({
         name: '',
         type: '',
@@ -36,10 +37,12 @@ export default function AddElection({isOpen, setIsOpen }){
             body: JSON.stringify(formData),
         }).then(response => {
             if(response.ok){
+                setFeedBack({message:'Election added successfully', severity:'success'});
                 console.log('Election added successfully');
                 handleClose();
             }
         }).catch(error => {
+            setFeedBack({message:'Error while adding election', severity:'error'});
             console.log('Error while adding election: ', error);
         })
         handleClose();

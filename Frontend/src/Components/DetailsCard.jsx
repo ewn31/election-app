@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ModifyElection from './ModifyElection';
 
 
-export default function DetailsCard({election, positions}) {
+export default function DetailsCard({election, positions, setFeedback}) {
 
     const [open, setOpen] = useState(false)
 
@@ -75,6 +75,7 @@ election_details.push(pastStartDate ? (pastEndDate ? ended : ongoing) : notYetBe
                             isOpen={open}
                             setIsOpen={setOpen}
                             election={election}
+                            setFeedback={setFeedback}
                         />
                         </CardActions>
                 </Card>
