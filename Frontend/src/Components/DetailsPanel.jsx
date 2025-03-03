@@ -6,11 +6,16 @@ import DetailsCard from './DetailsCard'
 import CandidateCard from './CandidateCard'
 import { useState, useEffect } from 'react'
 
-export default function DetailsPanel({elections, selectedElectionId, setFeedback}){
+export default function DetailsPanel({elections, selectedElectionId, setFeedback, feedback, setReloadElection}){
 
     console.log('In DetailsPanel: ', elections, selectedElectionId);
 
     const [election, setElection] = useState(null) 
+
+    const [reloadCandidate, setReloadCandidate] = useState(false)
+
+    console.log('In details panel, feedback: ',feedback, setFeedback);
+    
 
     useEffect(() => {
         fetch(`http://localhost:3000/admin/election/${selectedElectionId}/candidates`).then(response =>{
@@ -21,7 +26,7 @@ export default function DetailsPanel({elections, selectedElectionId, setFeedback
             setPositions(json)
             console.log('Positions: ', json)
         }).catch(error => { console.log('Error while fetching positions', error) })
-    }, [selectedElectionId])
+    }, [selectedElectionId, reloadCandidate])
     
     const [positions, setPositions] = useState(null)
 
@@ -83,6 +88,8 @@ export default function DetailsPanel({elections, selectedElectionId, setFeedback
                         </Button>
                         <AddCandidate isOpen={open} setIsOpen={setOpen} selectedId={selectedElectionId} 
                             setFeedback={setFeedback}
+                            feedback={feedback}
+                            setReloadCandidate={setReloadCandidate}
                         />
                     </Box>
                     {Object.keys(positions).length === 0 ? <Typography variant='h5' component={'h5'}>No Candidates</Typography> :
@@ -95,6 +102,7 @@ export default function DetailsPanel({elections, selectedElectionId, setFeedback
                   <DetailsCard election={elections.find(election=>election._id === selectedElectionId)}
                   setFeedback={setFeedback}
                   positions={positions} 
+                  setReloadElection={setReloadElection}
                   className='candidate-card'
                   />
                 </Box>

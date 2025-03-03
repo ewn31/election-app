@@ -7,9 +7,12 @@ import ElectionList from "./ElectionList";
 import { basicFilter } from '../lib/filter'
 
 
-export default function ElectionBox({ user, elections, selectedId, setSelectedId, fetchState, setFeedback }){
+export default function ElectionBox({ user, elections, selectedId, setSelectedId, fetchState, setFeedback, relaodElection, setReloadElection }){
 
     const [electionsToDisplay, setElectionsToDisplay] = useState(elections);
+
+    console.log(elections, electionsToDisplay);
+    
 
     const [search, setSearch] = useState('');
 
@@ -22,7 +25,10 @@ export default function ElectionBox({ user, elections, selectedId, setSelectedId
     function handleChange(e){
         const { value } = e.target;
         //setSearch(value);
-        console.log(basicFilter(elections, search, 'name'));
+        //console.log(basicFilter(elections, search, 'name'));
+        setSearch(value)
+        setElectionsToDisplay(elections.filter((election) => election.name.startsWith(value)));
+
     }
 
     function SearchBar(){
@@ -34,6 +40,8 @@ export default function ElectionBox({ user, elections, selectedId, setSelectedId
         variant="outlined"
         fullWidth={true}
         size="Small"
+        value={search}
+        autoFocus={true}
         sx={{ backgroundColor:'#fef7ff', margin:'10px 0px', borderRadius:'36px', 
             '& .MuiOutlinedInput-root': {
                 borderRadius: '36px',
@@ -81,6 +89,7 @@ export default function ElectionBox({ user, elections, selectedId, setSelectedId
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                     setFeedback={setFeedback}
+                    setReloadElection={setReloadElection}
                      />
                 </IconButton>}
             </Box>
@@ -91,7 +100,7 @@ export default function ElectionBox({ user, elections, selectedId, setSelectedId
         <div>
             <TitleBar />
             <SearchBar />
-            <ElectionList elections={elections} 
+            <ElectionList elections={electionsToDisplay || elections} 
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             fetchState={fetchState}

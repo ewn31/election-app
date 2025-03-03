@@ -15,8 +15,7 @@ export default function SideBar(){
                 '&.MuiButtonBase-root-MuiListItemButton-root':{
                     paddingLeft:'0px', 
                     paddingRight:'0px'
-                },'&.MuiListItem-root':{padding:'0px'},
-                '&.MuiList-root':{width:'48px', margin:'0px'}}}>
+                },'&.MuiList-root':{width:'48px', margin:'0px', padding:'0px'}}}>
             <ListItem alignItems='flex-start' sx={{p:0}}>
                 <ListItemButton>
                     <ListItemIcon>

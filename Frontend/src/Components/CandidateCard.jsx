@@ -34,7 +34,7 @@ export default function CandidateCard({electionId, positions, setElectionId}) {
         candidateList.push(
             <Box className='candidate-card'>
                 <Card key={position} sx={{borderRadius:'24px'}} >
-                    <CardHeader
+                    <CardHeader sx={{color:'primary.main'}}
                         title={position}
                     />
                     <CardContent>

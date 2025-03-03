@@ -10,7 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 
 const theme = createTheme({
   shape: {
-    borderRadius: 36
+    borderRadius: 8
   },
 })
 

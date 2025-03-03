@@ -4,4 +4,4 @@ export function basicFilter(list, chars, property){
 
 let list = [{name:'election1'}, {name:'general-election'}, {name:'election3'}];
 
-console.log(basicFilter(list, 'ele', 'name'));
+console.log(basicFilter(list, 'ge', 'name'));

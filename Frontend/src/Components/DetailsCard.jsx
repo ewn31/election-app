@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ModifyElection from './ModifyElection';
 
 
-export default function DetailsCard({election, positions, setFeedback}) {
+export default function DetailsCard({election, positions, setFeedback, setReloadElection}) {
 
     const [open, setOpen] = useState(false)
 
@@ -51,7 +51,7 @@ election_details.push(pastStartDate ? (pastEndDate ? ended : ongoing) : notYetBe
     return (
             <Box className='candidate-card' sx={{position:'fixed'}}>
                 <Card key={election._id} sx={{borderRadius:'24px'}} >
-                    <CardHeader
+                    <CardHeader sx={{color:'primary.main'}}
                         title={election.name}
                     />
                     <CardContent>
@@ -76,6 +76,7 @@ election_details.push(pastStartDate ? (pastEndDate ? ended : ongoing) : notYetBe
                             setIsOpen={setOpen}
                             election={election}
                             setFeedback={setFeedback}
+                            setReloadElection={setReloadElection}
                         />
                         </CardActions>
                 </Card>

@@ -16,6 +16,8 @@ export default function AdminPage() {
 
     const [user , setUser] = useState('admin');
 
+    const [reloadElection, setReloadElection] = useState(false);
+
     const [feedback, setFeedback] = useState({message: 'succefully loading', severity: 'success'})   ;
 
 
@@ -34,16 +36,15 @@ export default function AdminPage() {
         console.log('Selected Election Id: ', selectedElectionId);
         console.log('Typeof start_date: ', typeof(json[0].start_date))
         console.log('start_date: ', new Date(json[0].start_date).toDateString());
-        
+        console.log('feedback: ', feedback)
         
           
     }).catch(error => {
         console.log('Error while fetching elections: ', error)
         setElections(null)
         setFetchState('failed')
-    })
-    }
-    ,[])
+    })}
+    ,[reloadElection])
 
     return (
         <div className="admin-page">
@@ -57,11 +58,15 @@ export default function AdminPage() {
                 fetchState={fetchState}
                 user={user}
                 setFeedback={setFeedback}
+                reloadElection={reloadElection}
+                setReloadElection={setReloadElection}
                 />
             </div>
             <div className="main-section">
                 <DetailsPanel elections={elections} selectedElectionId={selectedElectionId}
                   setFeedback={setFeedback}
+                  feedback={feedback}
+                  setReloadElection={setReloadElection}
                 />
                 <FeedBack feedback={feedback} />
             </div>
